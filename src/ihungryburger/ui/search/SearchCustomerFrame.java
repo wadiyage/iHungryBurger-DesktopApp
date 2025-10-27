@@ -5,18 +5,11 @@
 package ihungryburger.ui.search;
 
 import ihungryburger.controller.BurgerController;
-import ihungryburger.model.Burger;
-import ihungryburger.service.BurgerList;
 import ihungryburger.ui.DashboardFrame;
-import java.io.BufferedReader;
-import java.io.FileNotFoundException;
-import java.io.FileReader;
-import java.io.FileWriter;
 import java.io.IOException;
 import java.util.logging.Level;
 import java.util.logging.Logger;
 import javax.swing.JOptionPane;
-import javax.swing.table.DefaultTableModel;
 
 
 /**
@@ -24,13 +17,11 @@ import javax.swing.table.DefaultTableModel;
  * @author Dell
  */
 public class SearchCustomerFrame extends javax.swing.JFrame {
-    public BurgerList burgerList;
     public BurgerController burgerController;
     
     public SearchCustomerFrame() {
         initComponents();
-        burgerList = new BurgerList();
-        burgerController = new BurgerController();
+        burgerController = new BurgerController(tblSearchBurgerDetails);
         
         txtCustomerID.setText("0");
         txtCustomerID.requestFocus();
@@ -146,10 +137,12 @@ public class SearchCustomerFrame extends javax.swing.JFrame {
                                 .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
                                 .addComponent(btnSearch, javax.swing.GroupLayout.PREFERRED_SIZE, 120, javax.swing.GroupLayout.PREFERRED_SIZE)))
                         .addContainerGap(344, Short.MAX_VALUE))
-                    .addGroup(jPanel1Layout.createSequentialGroup()
-                        .addComponent(jScrollPane1)
-                        .addGap(18, 18, 18)
-                        .addComponent(btnBackToHomePage, javax.swing.GroupLayout.PREFERRED_SIZE, 157, javax.swing.GroupLayout.PREFERRED_SIZE)
+                    .addGroup(javax.swing.GroupLayout.Alignment.TRAILING, jPanel1Layout.createSequentialGroup()
+                        .addGroup(jPanel1Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.TRAILING)
+                            .addComponent(jScrollPane1, javax.swing.GroupLayout.Alignment.LEADING)
+                            .addGroup(javax.swing.GroupLayout.Alignment.LEADING, jPanel1Layout.createSequentialGroup()
+                                .addGap(0, 0, Short.MAX_VALUE)
+                                .addComponent(btnBackToHomePage, javax.swing.GroupLayout.PREFERRED_SIZE, 157, javax.swing.GroupLayout.PREFERRED_SIZE)))
                         .addGap(17, 17, 17))))
         );
         jPanel1Layout.setVerticalGroup(
@@ -164,15 +157,11 @@ public class SearchCustomerFrame extends javax.swing.JFrame {
                 .addGroup(jPanel1Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.BASELINE)
                     .addComponent(lblCustomerName)
                     .addComponent(lblCustomerNameValue))
-                .addGroup(jPanel1Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
-                    .addGroup(jPanel1Layout.createSequentialGroup()
-                        .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.UNRELATED)
-                        .addComponent(jScrollPane1, javax.swing.GroupLayout.DEFAULT_SIZE, 180, Short.MAX_VALUE)
-                        .addGap(34, 34, 34))
-                    .addGroup(javax.swing.GroupLayout.Alignment.TRAILING, jPanel1Layout.createSequentialGroup()
-                        .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
-                        .addComponent(btnBackToHomePage)
-                        .addGap(15, 15, 15))))
+                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.UNRELATED)
+                .addComponent(jScrollPane1, javax.swing.GroupLayout.DEFAULT_SIZE, 159, Short.MAX_VALUE)
+                .addGap(18, 18, 18)
+                .addComponent(btnBackToHomePage)
+                .addGap(15, 15, 15))
         );
 
         jPanel2.setBackground(new java.awt.Color(102, 102, 255));
@@ -225,35 +214,24 @@ public class SearchCustomerFrame extends javax.swing.JFrame {
     }// </editor-fold>//GEN-END:initComponents
 
     private void btnSearchActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_btnSearchActionPerformed
-        FileReader fr = null;
+        String customerID = txtCustomerID.getText();
+        
+        boolean haveAlreadyCustomer;
         try {
-            DefaultTableModel dtm = (DefaultTableModel) tblSearchBurgerDetails.getModel();
-            dtm.setRowCount(0);
-            
-            String customerID = txtCustomerID.getText();
-            
-            fr = new FileReader("data/Burger.txt");
-            BufferedReader br = new BufferedReader(fr);
-            
-            String line = br.readLine();
-            while(line!=null) {
-                String[] rowData = line.split(",");
-                if(rowData[1].equals(customerID)) {
-                    Object[] objectVisedRowData = {rowData[0],rowData[3],Integer.parseInt(rowData[3])*Burger.BURGERPRICE};
-                    dtm.addRow(objectVisedRowData);
-                }   line = br.readLine();
+            haveAlreadyCustomer = burgerController.haveAlreadyCustomer(customerID);
+            if(haveAlreadyCustomer) {
+                String customerName = burgerController.getCustomerDetails(customerID);
+                lblCustomerNameValue.setText(customerName);
+            } else {
+                JOptionPane.showMessageDialog(this, "That's not existed! Try another.", "Invalid Customer", JOptionPane.ERROR_MESSAGE);
+
+                txtCustomerID.setText("0");
+                txtCustomerID.requestFocus();
             }
-        } catch (FileNotFoundException ex) {
-            Logger.getLogger(SearchCustomerFrame.class.getName()).log(Level.SEVERE, null, ex);
         } catch (IOException ex) {
             Logger.getLogger(SearchCustomerFrame.class.getName()).log(Level.SEVERE, null, ex);
-        } finally {
-            try {
-                fr.close();
-            } catch (IOException ex) {
-                Logger.getLogger(SearchCustomerFrame.class.getName()).log(Level.SEVERE, null, ex);
-            }
         }
+        
     }//GEN-LAST:event_btnSearchActionPerformed
 
     private void btnBackToHomePageActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_btnBackToHomePageActionPerformed

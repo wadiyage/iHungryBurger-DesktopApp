@@ -5,14 +5,9 @@
 package ihungryburger.ui.view;
 
 import ihungryburger.controller.BurgerController;
-import ihungryburger.model.Burger;
-import java.io.BufferedReader;
-import java.io.FileNotFoundException;
-import java.io.FileReader;
 import java.io.IOException;
 import java.util.logging.Level;
 import java.util.logging.Logger;
-import javax.swing.table.DefaultTableModel;
 
 
 /**
@@ -24,10 +19,10 @@ public class CanceledFrame extends javax.swing.JFrame {
     
     public CanceledFrame() throws IOException {
         initComponents();
-        burgerController = new BurgerController();
+        burgerController = new BurgerController(tblCanceledBurgerDetails);
         
         
-        loadTableData();
+        burgerController.canceledBurgerDetails();
         
         btnReload.requestFocus();
         btnReload.doClick();
@@ -180,29 +175,11 @@ public class CanceledFrame extends javax.swing.JFrame {
 
     private void btnReloadActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_btnReloadActionPerformed
         try {
-            loadTableData();
+            burgerController.canceledBurgerDetails();
         } catch (IOException ex) {
             Logger.getLogger(CanceledFrame.class.getName()).log(Level.SEVERE, null, ex);
         }
     }//GEN-LAST:event_btnReloadActionPerformed
-
-    private void loadTableData() throws FileNotFoundException, IOException {
-        DefaultTableModel dtm = (DefaultTableModel) tblCanceledBurgerDetails.getModel();
-        dtm.setRowCount(0);
-        
-        FileReader fr = new FileReader("data/Burger.txt");
-        BufferedReader br = new BufferedReader(fr);
-        
-        String line = br.readLine();
-        while(line!=null) {
-            String[] rowData = line.split("-");
-            if(rowData[4].equals("CANCELED")) {
-                Object[] objectVisedRowData = {rowData[0],rowData[1],rowData[2],rowData[3],(double)(Integer.parseInt(rowData[3])*Burger.BURGERPRICE)};
-                dtm.addRow(objectVisedRowData);
-            }
-            line = br.readLine();
-        }
-    }
     
     private void btnBackActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_btnBackActionPerformed
         try {

@@ -4,6 +4,7 @@
  */
 package ihungryburger.ui.search;
 
+import ihungryburger.controller.BurgerController;
 import ihungryburger.model.Burger;
 import ihungryburger.ui.DashboardFrame;
 import java.io.BufferedReader;
@@ -20,9 +21,11 @@ import javax.swing.JOptionPane;
  * @author Dell
  */
 public class SearchBurgerFrame extends javax.swing.JFrame {
+    public BurgerController burgerController;
     
     public SearchBurgerFrame() {
         initComponents();
+        burgerController = new BurgerController();
         
         txtSearchedID.setText("B");
         txtSearchedID.requestFocus();
@@ -250,55 +253,36 @@ public class SearchBurgerFrame extends javax.swing.JFrame {
 
     private void btnSearchActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_btnSearchActionPerformed
         String searchedID = txtSearchedID.getText();
-
-        FileReader fr = null;
+        
+        boolean haveAlreadyTaken;
         try {
-            fr = new FileReader("data/Burger.txt");
-        } catch (FileNotFoundException ex) {
-            Logger.getLogger(SearchBurgerFrame.class.getName()).log(Level.SEVERE, null, ex);
-        }
-        BufferedReader br = new BufferedReader(fr);
-
-        String line = null;
-        try {
-            line = br.readLine();
+            haveAlreadyTaken = burgerController.haveAlreadyTaken(searchedID);
+            if(haveAlreadyTaken) {
+                Burger burger = burgerController.retrieveBurger(searchedID);
+                lblCustomerIDValue.setText(burger.getCustomerID());
+                lblCustomerNameValue.setText(burger.getCustomerName());
+                
+                lblQTYValue.setText(String.valueOf(burger.getBurgerQty()));
+                
+                double total = burger.getBurgerQty()*Burger.BURGERPRICE;
+                lblTotalValue.setText(String.valueOf(total));
+                
+                lblOrderStatusValue.setText(burgerController.getStatusInTextMode(burger.getStatus()));
+            } else {
+                JOptionPane.showMessageDialog(this, "That's invalid! Try another.", "Invalid Burger", JOptionPane.ERROR_MESSAGE);
+                txtSearchedID.requestFocus();
+                txtSearchedID.setText("B");
+                
+                lblCustomerIDValue.setText("");
+                lblCustomerNameValue.setText("");
+                
+                lblQTYValue.setText("");
+                
+                lblTotalValue.setText("");
+                lblOrderStatusValue.setText("");
+            }
         } catch (IOException ex) {
             Logger.getLogger(SearchBurgerFrame.class.getName()).log(Level.SEVERE, null, ex);
-        }
-        L1:while(true) {
-            L2:while(line!=null) {
-                String[] rowData = line.split(",");
-                if(rowData[0].equalsIgnoreCase(searchedID)) {
-                    lblCustomerIDValue.setText(rowData[1]);
-                    lblCustomerNameValue.setText(rowData[2]);
-
-                    lblQTYValue.setText(rowData[3]);
-
-                    double total = Integer.parseInt(rowData[3])*Burger.BURGERPRICE;
-                    lblTotalValue.setText(String.valueOf(total));
-
-                    int status = Integer.parseInt(rowData[4]);
-
-                    String statusInTextMode;
-                    if(status==Burger.DELIVERED) {
-                        statusInTextMode = "DELIVERED";
-                    } else if(status==Burger.CANCELED) {
-                        statusInTextMode = "CANCELED";
-                    } else {
-                        statusInTextMode = "PREPARING";
-                    }
-                    lblOrderStatusValue.setText(statusInTextMode);
-                    break L1;
-                } else {
-                    try {
-                        line = br.readLine();
-                    } catch (IOException ex) {
-                        Logger.getLogger(SearchBurgerFrame.class.getName()).log(Level.SEVERE, null, ex);
-                    }
-                }
-            }
-            JOptionPane.showMessageDialog(this, "That's invalid! Try another.", "Invalid Burger", JOptionPane.ERROR_MESSAGE);
-            break;
         }
     }//GEN-LAST:event_btnSearchActionPerformed
 

@@ -4,16 +4,11 @@
  */
 package ihungryburger.ui.search;
 
-import ihungryburger.model.Burger;
+import ihungryburger.controller.BurgerController;
 import ihungryburger.ui.DashboardFrame;
-import java.io.BufferedReader;
-import java.io.FileNotFoundException;
-import java.io.FileReader;
 import java.io.IOException;
-import java.util.Arrays;
 import java.util.logging.Level;
 import java.util.logging.Logger;
-import javax.swing.table.DefaultTableModel;
 
 
 /**
@@ -21,11 +16,13 @@ import javax.swing.table.DefaultTableModel;
  * @author Dell
  */
 public class SearchBestCustomerFrame extends javax.swing.JFrame {
+    public BurgerController burgerController;
     
     public SearchBestCustomerFrame() throws IOException {
         initComponents();
+        burgerController = new BurgerController(tblBestCustomerDetails);
         
-        loadTableData();
+        burgerController.bestCustomerDetails();
     }
 
     /**
@@ -177,137 +174,11 @@ public class SearchBestCustomerFrame extends javax.swing.JFrame {
 
     private void btnReloadActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_btnReloadActionPerformed
         try {
-            loadTableData();
+            burgerController.bestCustomerDetails();
         } catch (IOException ex) {
             Logger.getLogger(SearchBestCustomerFrame.class.getName()).log(Level.SEVERE, null, ex);
         }
     }//GEN-LAST:event_btnReloadActionPerformed
-
-    private void loadTableData() throws IOException {
-        DefaultTableModel dtm = (DefaultTableModel) tblBestCustomerDetails.getModel();
-        dtm.setRowCount(0);
-        
-        String[] removedDuplicateCustomers = removeDuplicatedCustomers();
-        double[] totalPurchased = findTotalPurchasedForRelevantCustomer(removedDuplicateCustomers);
-        
-        removedDuplicateCustomers = sortRemovedDuplicatedCustomers(removedDuplicateCustomers, totalPurchased);
-        double[] sortedTotalPurchased = sortTotalPurchasedForRelevantCustomers(totalPurchased);
-        String[] desSortedCustomerNames = desSortedNamesRegardingToTotalPurchasedForRelevantCustomers(removedDuplicateCustomers);
-        System.out.println(Arrays.toString(desSortedCustomerNames));
-        for(int i=0;i<removedDuplicateCustomers.length;i++) {
-            Object[] rowData = {removedDuplicateCustomers[i],desSortedCustomerNames[i],sortedTotalPurchased[i]};
-            dtm.addRow(rowData);
-        }
-    }
-    
-    private String[] removeDuplicatedCustomers() throws FileNotFoundException, IOException {
-        String[] removedDuplicatedCustomers = new String[0];
-        
-        FileReader fr = new FileReader("data/Burger.txt");
-        BufferedReader br = new BufferedReader(fr);
-                
-        String line = br.readLine();
-        while(line!=null) {
-            String[] rowData = line.split(",");
-            if(!HaveDuplicated(removedDuplicatedCustomers, rowData[1])) {
-                String[] tempRemovedDuplicatedCustomers = new String[removedDuplicatedCustomers.length+1];
-                for(int i=0;i<removedDuplicatedCustomers.length;i++) {
-                    tempRemovedDuplicatedCustomers[i]=removedDuplicatedCustomers[i];
-                }
-                tempRemovedDuplicatedCustomers[tempRemovedDuplicatedCustomers.length-1]=rowData[1];
-                removedDuplicatedCustomers=tempRemovedDuplicatedCustomers;
-            }
-            line = br.readLine();
-        }
-        return removedDuplicatedCustomers;
-    }
-    
-    private boolean HaveDuplicated(String[] removedDuplicatedCustomers, String customerID) { 
-        for(int i=0;i<removedDuplicatedCustomers.length;i++) {
-            if(removedDuplicatedCustomers[i].equals(customerID)) {
-                return true;
-            }
-        }
-        return false;
-    }
-    
-    private double[] findTotalPurchasedForRelevantCustomer(String[] removedDuplicatedCustomers) throws IOException {
-        double[] totalPurchasedForRelevantCustomer = new double[removedDuplicatedCustomers.length];
-        FileReader fr = null;
-        try {
-            for(int i=0;i<removedDuplicatedCustomers.length;i++) {
-                fr = new FileReader("data/Burger.txt");
-                BufferedReader br = new BufferedReader(fr);
-                
-                String line = br.readLine();
-                while(line!=null) {
-                    String[] rowData = line.split(",");
-                    if(removedDuplicatedCustomers[i].equals(rowData[1])) {
-                        totalPurchasedForRelevantCustomer[i]+=Integer.parseInt(rowData[3])*Burger.BURGERPRICE;
-                    }
-                    line = br.readLine();
-                }
-            }
-        } catch (FileNotFoundException ex) {
-            Logger.getLogger(SearchBestCustomerFrame.class.getName()).log(Level.SEVERE, null, ex);
-        } finally {
-            try {
-                fr.close();
-            } catch (IOException ex) {
-                Logger.getLogger(SearchBestCustomerFrame.class.getName()).log(Level.SEVERE, null, ex);
-            }
-        }
-        return totalPurchasedForRelevantCustomer;
-    }
-    
-    private String[] sortRemovedDuplicatedCustomers(String[] removedDuplicatedCustomers, double[] totalPurchased) {
-        for(int i=totalPurchased.length-1;i>=0;i--) {
-            for(int j=0;j<i;j++) {
-                if(totalPurchased[j]<totalPurchased[j+1]) {
-                    double tempTotalPurchased = totalPurchased[j];
-                    totalPurchased[j] = totalPurchased[j+1];
-                    totalPurchased[j+1] = tempTotalPurchased;
-                    
-                    String tempCustomerID = removedDuplicatedCustomers[j];
-                    removedDuplicatedCustomers[j] = removedDuplicatedCustomers[j+1];
-                    removedDuplicatedCustomers[j+1] = tempCustomerID;
-                }
-            }
-        }
-        return removedDuplicatedCustomers;
-    }
-    
-    private double[] sortTotalPurchasedForRelevantCustomers(double[] totalPurchased) {
-        for(int i=totalPurchased.length-1;i>=0;i--) {
-            for(int j=0;j<i;j++) {
-                if(totalPurchased[j]<totalPurchased[j+1]) {
-                    double temp = totalPurchased[j];
-                    totalPurchased[j] = totalPurchased[j+1];
-                    totalPurchased[j+1] = temp;
-                }
-            }
-        }
-        return totalPurchased;
-    }
-    
-    private String[] desSortedNamesRegardingToTotalPurchasedForRelevantCustomers(String[] removedDuplicatedCustomers) throws FileNotFoundException, IOException {
-        String[] sortedRemovedDuplicatedCustomerNames = new String[removedDuplicatedCustomers.length];
-        
-        for(int i=0;i<removedDuplicatedCustomers.length;i++) {
-            FileReader fr = new FileReader("data/Burger.txt");
-            BufferedReader br = new BufferedReader(fr);
-            
-            String line = br.readLine();
-            while(line!=null) {
-                String[] rowData = line.split(",");
-                if(removedDuplicatedCustomers[i].equals(rowData[1])) {
-                    sortedRemovedDuplicatedCustomerNames[i]=rowData[2];
-                }
-                line = br.readLine();
-            }
-        }
-        return sortedRemovedDuplicatedCustomerNames;
-    }
     
     private void btnBackActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_btnBackActionPerformed
         dispose();

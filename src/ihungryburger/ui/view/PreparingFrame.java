@@ -24,10 +24,10 @@ public class PreparingFrame extends javax.swing.JFrame {
     
     public PreparingFrame() throws IOException {
         initComponents();
-        burgerController = new BurgerController();
+        burgerController = new BurgerController(tblPreparingBurgerDetails);
         
         
-        loadTableData();
+        burgerController.preparingBurgerDetails();
         
         btnReload.requestFocus();
         btnReload.doClick();
@@ -167,29 +167,11 @@ public class PreparingFrame extends javax.swing.JFrame {
 
     private void btnReloadActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_btnReloadActionPerformed
         try {
-            loadTableData();
+            burgerController.preparingBurgerDetails();
         } catch (IOException ex) {
             Logger.getLogger(PreparingFrame.class.getName()).log(Level.SEVERE, null, ex);
         }
     }//GEN-LAST:event_btnReloadActionPerformed
-
-    private void loadTableData() throws FileNotFoundException, IOException {
-        DefaultTableModel dtm = (DefaultTableModel) tblPreparingBurgerDetails.getModel();
-        dtm.setRowCount(0);
-        
-        FileReader fr = new FileReader("data/Burger.txt");
-        BufferedReader br = new BufferedReader(fr);
-        
-        String line = br.readLine();
-        while(line!=null) {
-            String[] rowData = line.split("-");
-            if(rowData[4].equals("PREPARING")) {
-                Object[] objectVisedRowData = {rowData[0],rowData[1],rowData[2],rowData[3],(double)(Integer.parseInt(rowData[3])*Burger.BURGERPRICE)};
-                dtm.addRow(objectVisedRowData);
-            }
-            line = br.readLine();
-        }
-    }
     
     private void btnBackActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_btnBackActionPerformed
         try {
