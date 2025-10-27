@@ -277,7 +277,7 @@ public class PlaceBurgerFrame extends javax.swing.JFrame {
         } catch (NumberFormatException e) {
             System.out.println("Error: Invalid number format in String.");
         } 
-        double totalValue = Burger.BURGERPRICE*burgerQty;
+        double totalValue = burgerQty*Burger.BURGERPRICE;
         lblNetTotalValue.setText(String.valueOf(totalValue));
 
         Burger burger = new Burger(generatedID,customerID,customerName,burgerQty,Burger.PREPARING);

@@ -4,8 +4,8 @@
  */
 package ihungryburger.ui.view;
 
+import ihungryburger.controller.BurgerController;
 import ihungryburger.model.Burger;
-import ihungryburger.service.BurgerList;
 import java.io.BufferedReader;
 import java.io.FileNotFoundException;
 import java.io.FileReader;
@@ -20,9 +20,13 @@ import javax.swing.table.DefaultTableModel;
  * @author Dell
  */
 public class PreparingFrame extends javax.swing.JFrame {
+    public BurgerController burgerController;
     
     public PreparingFrame() throws IOException {
         initComponents();
+        burgerController = new BurgerController();
+        
+        
         loadTableData();
         
         btnReload.requestFocus();
@@ -178,10 +182,9 @@ public class PreparingFrame extends javax.swing.JFrame {
         
         String line = br.readLine();
         while(line!=null) {
-            String[] rowData = line.split(",");
-            int status = Integer.parseInt(rowData[4]);
-            if(status==Burger.PREPARING) {
-                Object[] objectVisedRowData = {rowData[0],rowData[1],rowData[2],rowData[3],status};
+            String[] rowData = line.split("-");
+            if(rowData[4].equals("PREPARING")) {
+                Object[] objectVisedRowData = {rowData[0],rowData[1],rowData[2],rowData[3],(double)(Integer.parseInt(rowData[3])*Burger.BURGERPRICE)};
                 dtm.addRow(objectVisedRowData);
             }
             line = br.readLine();

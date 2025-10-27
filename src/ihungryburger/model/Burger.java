@@ -97,5 +97,9 @@ public class Burger {
         this.status = status;
     }
     
+    public String toBurger() {
+        return burgerID+"-"+customerID+"-"+customerName+"-"+burgerQty+"-"+status;
+    } 
+    
     
 }

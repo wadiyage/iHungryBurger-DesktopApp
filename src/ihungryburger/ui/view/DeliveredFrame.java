@@ -4,7 +4,7 @@
  */
 package ihungryburger.ui.view;
 
-import ihungryburger.service.BurgerList;
+import ihungryburger.controller.BurgerController;
 import ihungryburger.model.Burger;
 import java.io.BufferedReader;
 import java.io.FileNotFoundException;
@@ -20,9 +20,13 @@ import javax.swing.table.DefaultTableModel;
  * @author Dell
  */
 public class DeliveredFrame extends javax.swing.JFrame {
+    public BurgerController burgerController;
     
     public DeliveredFrame() throws IOException {
         initComponents();
+        burgerController = new BurgerController();
+        
+        
         loadTableData();
         
         btnReload.requestFocus();
@@ -41,7 +45,7 @@ public class DeliveredFrame extends javax.swing.JFrame {
         jPanel1 = new javax.swing.JPanel();
         btnReload = new javax.swing.JButton();
         jScrollPane1 = new javax.swing.JScrollPane();
-        tblPreparingBurgerDetails = new javax.swing.JTable();
+        tblDeliveredBurgerDetails = new javax.swing.JTable();
         btnBack = new javax.swing.JButton();
         jPanel2 = new javax.swing.JPanel();
         lblWelcomeMessage = new javax.swing.JLabel();
@@ -61,8 +65,8 @@ public class DeliveredFrame extends javax.swing.JFrame {
             }
         });
 
-        tblPreparingBurgerDetails.setFont(new java.awt.Font("Haettenschweiler", 0, 18)); // NOI18N
-        tblPreparingBurgerDetails.setModel(new javax.swing.table.DefaultTableModel(
+        tblDeliveredBurgerDetails.setFont(new java.awt.Font("Haettenschweiler", 0, 18)); // NOI18N
+        tblDeliveredBurgerDetails.setModel(new javax.swing.table.DefaultTableModel(
             new Object [][] {
 
             },
@@ -85,7 +89,7 @@ public class DeliveredFrame extends javax.swing.JFrame {
                 return canEdit [columnIndex];
             }
         });
-        jScrollPane1.setViewportView(tblPreparingBurgerDetails);
+        jScrollPane1.setViewportView(tblDeliveredBurgerDetails);
 
         btnBack.setBackground(new java.awt.Color(0, 51, 255));
         btnBack.setFont(new java.awt.Font("Haettenschweiler", 0, 18)); // NOI18N
@@ -183,7 +187,7 @@ public class DeliveredFrame extends javax.swing.JFrame {
     }//GEN-LAST:event_btnReloadActionPerformed
 
     private void loadTableData() throws FileNotFoundException, IOException {
-        DefaultTableModel dtm = (DefaultTableModel) tblPreparingBurgerDetails.getModel();
+        DefaultTableModel dtm = (DefaultTableModel) tblDeliveredBurgerDetails.getModel();
         dtm.setRowCount(0);
         
         FileReader fr = new FileReader("data/Burger.txt");
@@ -191,10 +195,9 @@ public class DeliveredFrame extends javax.swing.JFrame {
         
         String line = br.readLine();
         while(line!=null) {
-            String[] rowData = line.split(",");
-            int status = Integer.parseInt(rowData[4]);
-            if(status==Burger.DELIVERED) {
-                Object[] objectVisedRowData = {rowData[0],rowData[1],rowData[2],rowData[3],status};
+            String[] rowData = line.split("-");
+            if(rowData[4].equals("DELIVERED")) {
+                Object[] objectVisedRowData = {rowData[0],rowData[1],rowData[2],rowData[3],(double)(Integer.parseInt(rowData[3])*Burger.BURGERPRICE)};
                 dtm.addRow(objectVisedRowData);
             }
             line = br.readLine();
@@ -219,6 +222,6 @@ public class DeliveredFrame extends javax.swing.JFrame {
     private javax.swing.JPanel jPanel2;
     private javax.swing.JScrollPane jScrollPane1;
     private javax.swing.JLabel lblWelcomeMessage;
-    private javax.swing.JTable tblPreparingBurgerDetails;
+    private javax.swing.JTable tblDeliveredBurgerDetails;
     // End of variables declaration//GEN-END:variables
 }

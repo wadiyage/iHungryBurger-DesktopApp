@@ -13,17 +13,13 @@ import java.io.FileWriter;
 import java.io.IOException;
 import java.util.logging.Level;
 import java.util.logging.Logger;
+import javax.swing.table.DefaultTableModel;
 
 /**
  *
  * @author Dell
  */
 public class BurgerController {
-    private BurgerList burgerList;
-    
-    public BurgerController() {
-        burgerList = new BurgerList();
-    }
     
     public String generateBurgerID() throws FileNotFoundException, IOException {
         FileReader fr = new FileReader("data/Burger.txt");
@@ -107,7 +103,7 @@ public class BurgerController {
     public void addNewBurger(Burger burger) throws IOException {
         FileWriter fw = new FileWriter("data/Burger.txt", true);
         fw.write(burger.getBurgerID()+"-"+burger.getCustomerID()+"-"+burger.getCustomerName()+"-"+Integer.toString(burger.getBurgerQty())+"-"+getStatusInTextMode(burger.getStatus())+"\n");
-        burgerList.add(burger);
+        // burgerList.add(burger);
         fw.close();
     } 
     
@@ -127,6 +123,6 @@ public class BurgerController {
         }
         return statusInTextMode;
     }
-
+    
     
 }
