@@ -7,6 +7,7 @@ package ihungryburger.controller;
 import ihungryburger.model.Burger;
 import ihungryburger.ui.search.SearchBestCustomerFrame;
 import java.io.BufferedReader;
+import java.io.File;
 import java.io.FileNotFoundException;
 import java.io.FileReader;
 import java.io.FileWriter;
@@ -406,6 +407,84 @@ public class BurgerController {
             }
         }
         return sortedRemovedDuplicatedCustomerNames;
+    }
+    
+    public void updateStatusOfRelevantBurger(String burgerID, String updatedStatus) throws FileNotFoundException, IOException {
+        new File("data/temp.txt");
+        FileReader fr = new FileReader("data/Burger.txt");
+        BufferedReader br = new BufferedReader(fr);
+        
+        String line = br.readLine();
+        FileWriter tempFileWriter = new FileWriter("data/Temp.txt");
+        while(line!=null) {
+            String[] rowData = line.split("-");
+            String exBurgerID = rowData[0];
+            
+            if(exBurgerID.equalsIgnoreCase(burgerID)) {
+                tempFileWriter.write(exBurgerID+"-"+rowData[1]+"-"+rowData[2]+"-"+rowData[3]+"-"+updatedStatus+"\n");
+            } else {
+                tempFileWriter.write(exBurgerID+"-"+rowData[1]+"-"+rowData[2]+"-"+rowData[3]+"-"+rowData[4]+"\n");
+            }
+            line = br.readLine();
+        }
+        tempFileWriter.close();
+        new File("data/Burger.txt").delete();
+        
+        fr = new FileReader("data/Temp.txt");
+        br = new BufferedReader(fr);
+        
+        FileWriter fw = new FileWriter("data/Burger.txt");
+        String rereadLine = br.readLine();
+        while(rereadLine!=null) {
+            String[] updatedRowData = rereadLine.split("-");
+            fw.write(updatedRowData[0]+"-"+updatedRowData[1]+"-"+updatedRowData[2]+"-"+updatedRowData[3]+"-"+updatedRowData[4]+"\n");
+            rereadLine = br.readLine();
+        }
+        fw.close();
+
+        fr.close();
+        br.close();
+
+        new File("data/Temp.txt").delete();
+    }
+    
+    public void updateQtyOfRelevantBurger(String burgerID, int updatedBurgerQty) throws FileNotFoundException, IOException {
+        new File("data/temp.txt");
+        FileReader fr = new FileReader("data/Burger.txt");
+        BufferedReader br = new BufferedReader(fr);
+        
+        String line = br.readLine();
+        FileWriter tempFileWriter = new FileWriter("data/Temp.txt");
+        while(line!=null) {
+            String[] rowData = line.split("-");
+            String exBurgerID = rowData[0];
+            
+            if(exBurgerID.equalsIgnoreCase(burgerID)) {
+                tempFileWriter.write(exBurgerID+"-"+rowData[1]+"-"+rowData[2]+"-"+Integer.toString(updatedBurgerQty)+"-"+rowData[4]+"\n");
+            } else {
+                tempFileWriter.write(exBurgerID+"-"+rowData[1]+"-"+rowData[2]+"-"+rowData[3]+"-"+rowData[4]+"\n");
+            }
+            line = br.readLine();
+        }
+        tempFileWriter.close();
+        new File("data/Burger.txt").delete();
+        
+        fr = new FileReader("data/Temp.txt");
+        br = new BufferedReader(fr);
+        
+        FileWriter fw = new FileWriter("data/Burger.txt");
+        String rereadLine = br.readLine();
+        while(rereadLine!=null) {
+            String[] updatedRowData = rereadLine.split("-");
+            fw.write(updatedRowData[0]+"-"+updatedRowData[1]+"-"+updatedRowData[2]+"-"+updatedRowData[3]+"-"+updatedRowData[4]+"\n");
+            rereadLine = br.readLine();
+        }
+        fw.close();
+
+        fr.close();
+        br.close();
+
+        new File("data/Temp.txt").delete();
     }
     
 }

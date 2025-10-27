@@ -6,13 +6,7 @@ package ihungryburger.ui.update;
 
 import ihungryburger.controller.BurgerController;
 import ihungryburger.model.Burger;
-import ihungryburger.service.BurgerList;
 import ihungryburger.ui.DashboardFrame;
-import java.io.BufferedReader;
-import java.io.File;
-import java.io.FileNotFoundException;
-import java.io.FileReader;
-import java.io.FileWriter;
 import java.io.IOException;
 import java.util.logging.Level;
 import java.util.logging.Logger;
@@ -23,12 +17,10 @@ import javax.swing.JOptionPane;
  * @author Dell
  */
 public class UpdateBurgerStatusFrame extends javax.swing.JFrame {
-    public BurgerList burgerList;
     public BurgerController burgerController;
     
     public UpdateBurgerStatusFrame() {
         initComponents();
-        burgerList = new BurgerList();
         burgerController = new BurgerController();
         
         cbOrderStatus.setEnabled(false);
@@ -303,89 +295,45 @@ public class UpdateBurgerStatusFrame extends javax.swing.JFrame {
 
     private void btnStatusUpdateActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_btnStatusUpdateActionPerformed
         String searchedID = txtSearchedID.getText();
-        
         String updatedStatus = (String) cbOrderStatus.getSelectedItem(); 
         
-        int updatedStatusAsInteger;
-        if(updatedStatus.equals("DELIVERED")) {
-            updatedStatusAsInteger = Burger.DELIVERED;
-        } else if(updatedStatus.equals("CANCELED")) {
-            updatedStatusAsInteger = Burger.CANCELED;
-        } else {
-            updatedStatusAsInteger = Burger.PREPARING;
-        }
-        
-        int confirmUpdate = JOptionPane.showConfirmDialog(this, "You're about update the place?", "Confirm Update", JOptionPane.YES_NO_OPTION, JOptionPane.QUESTION_MESSAGE);
-        if(confirmUpdate==JOptionPane.YES_OPTION) {
-            new File("data/temp.txt");
-            FileReader fr = null;
-            try {
-                fr = new FileReader("data/Burger.txt");
-            } catch (FileNotFoundException ex) {
-                Logger.getLogger(UpdateBurgerStatusFrame.class.getName()).log(Level.SEVERE, null, ex);
+        boolean haveAlreadyTaken;
+        try {
+            haveAlreadyTaken = haveAlreadyTaken = burgerController.haveAlreadyTaken(searchedID);
+            if(haveAlreadyTaken) {
+                Burger burger = burgerController.retrieveBurger(searchedID);
+                int confirmUpdate = JOptionPane.showConfirmDialog(this, "You're about update the place?", "Confirm Update", JOptionPane.YES_NO_OPTION, JOptionPane.QUESTION_MESSAGE);
+                if(confirmUpdate==JOptionPane.YES_OPTION) {
+                    burgerController.updateStatusOfRelevantBurger(searchedID, updatedStatus);
+                    JOptionPane.showMessageDialog(this, "Your burger has been updated successfully!", "Burger Update", JOptionPane.INFORMATION_MESSAGE);
+                    
+                    btnQTYUpdate.setEnabled(true);
+
+                    cbOrderStatus.setEnabled(false);
+
+                    txtSearchedID.setText("B");
+
+                    txtCustomerID.setText("");
+                    txtCustomerID.setEnabled(false);
+
+                    txtCustomerName.setText("");
+                    txtCustomerName.setEnabled(false);
+
+                    txtBurgerQty.setText("");
+                    txtBurgerQty.setEnabled(false);
+
+                    lblTotalValue.setText("");
+                    lblTotalValue.setEnabled(false);
+                } else {
+                    JOptionPane.showMessageDialog(this, "Your burger update has been canceled successfully!", "Burger Update Canceled", JOptionPane.INFORMATION_MESSAGE);
+                    dispose();
+                    new DashboardFrame().setVisible(true);
+                }
             }
-            BufferedReader br = new BufferedReader(fr);
-
-            try {
-                FileWriter tempFileWriter = new FileWriter("data/Temp.txt");
-                String line = null;
-                try {
-                    line = br.readLine();
-                } catch (IOException ex) {
-                    Logger.getLogger(UpdateBurgerStatusFrame.class.getName()).log(Level.SEVERE, null, ex);
-                }
-                while(line!=null) {
-                    String[] rowData = line.split(",");
-                    String extractedBurgerID = rowData[0];
-                    if(extractedBurgerID.equalsIgnoreCase(searchedID)) {
-                        tempFileWriter.write(extractedBurgerID+","+rowData[1]+","+rowData[2]+","+rowData[3]+","+Integer.toString(updatedStatusAsInteger)+"\n");
-                    } else {
-                        tempFileWriter.write(extractedBurgerID+","+rowData[1]+","+rowData[2]+","+rowData[3]+","+rowData[4]+"\n");
-                    }
-                    line = br.readLine();
-                }
-                tempFileWriter.close();
-
-                new File("data/Burger.txt").delete();
-
-                fr = new FileReader("data/Temp.txt");
-                br = new BufferedReader(fr);
-
-                FileWriter fw = new FileWriter("data/Burger.txt");
-                String rereadLine = br.readLine();
-                while(rereadLine!=null) {
-                    String[] updatedRowData = rereadLine.split(",");
-                    fw.write(updatedRowData[0]+","+updatedRowData[1]+","+updatedRowData[2]+","+updatedRowData[3]+","+updatedRowData[4]+"\n");
-
-                    rereadLine = br.readLine();
-                }
-                fw.close();
-
-                fr.close();
-                br.close();
-
-                new File("data/Temp.txt").delete();
-                
-                btnQTYUpdate.setEnabled(true);
-
-                cbOrderStatus.setEnabled(false);
-
-                txtSearchedID.setText("B");
-
-                txtCustomerID.setText("");
-                txtCustomerID.setEnabled(false);
-
-                txtCustomerName.setText("");
-                txtCustomerName.setEnabled(false);
-
-                txtBurgerQty.setText("");
-                txtBurgerQty.setEnabled(false);
-
-                lblTotalValue.setText("");
-                lblTotalValue.setEnabled(false);
-            } catch (IOException ex) {
-                Logger.getLogger(UpdateBurgerStatusFrame.class.getName()).log(Level.SEVERE, null, ex);
-            }
+        } catch (IOException ex) {
+            Logger.getLogger(UpdateBurgerStatusFrame.class.getName()).log(Level.SEVERE, null, ex);
+        } finally {
+            
         }
     }//GEN-LAST:event_btnStatusUpdateActionPerformed
 
@@ -395,87 +343,61 @@ public class UpdateBurgerStatusFrame extends javax.swing.JFrame {
     }//GEN-LAST:event_btnBackToHomePageActionPerformed
 
     private void txtSearchedIDActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_txtSearchedIDActionPerformed
-        FileReader fr = null;
+        String searchedID = txtSearchedID.getText();
+        
+        boolean haveAlreadyTaken;
         try {
-            String searchedID = txtSearchedID.getText();
-            
-            fr = new FileReader("data/Burger.txt");
-            BufferedReader br = new BufferedReader(fr);
-            
-            try {
-                String line = br.readLine();
-                L1:while(true) {
-                    L2:while(line!=null) {
-                        String[] rowData = line.split(",");
-                        String extractedBurgerID = rowData[0];
-                        if(extractedBurgerID.equalsIgnoreCase(searchedID)) {
-                            txtCustomerID.setText(rowData[1]);
-                            txtCustomerName.setText(rowData[2]);
+            haveAlreadyTaken = burgerController.haveAlreadyTaken(searchedID);
+            if(haveAlreadyTaken) {
+                Burger burger = burgerController.retrieveBurger(searchedID);
+                txtCustomerID.setText(burger.getCustomerID());
+                txtCustomerName.setText(burger.getCustomerName());
+                
+                txtBurgerQty.setText(Integer.toString(burger.getBurgerQty()));
+                
+                double total = burger.getBurgerQty()*Burger.BURGERPRICE;
+                lblTotalValue.setText(String.valueOf(total));
+                
+                String statusInTextMode = burgerController.getStatusInTextMode(burger.getStatus());
+                cbOrderStatus.setSelectedItem(statusInTextMode);
+                
+                if(statusInTextMode.equals("DELIVERED")) {
+                    lblStatusAlert.setText("<html><b>This burger has already Delivered!<b/> So, you cannot update this burger...</html>");
 
-                            txtBurgerQty.setText(rowData[3]);
+                    cbOrderStatus.setEnabled(false);
+                    btnStatusUpdate.setEnabled(false);
+                } else if(statusInTextMode.equals("CANCELED")) {
+                    lblStatusAlert.setText("<html><b>This burger has already Canceled!<b/> So, you cannot update this burger...</html>");
 
-                            double total = Integer.parseInt(rowData[3])*Burger.BURGERPRICE;
-                            lblTotalValue.setText(String.valueOf(total));
+                    cbOrderStatus.setEnabled(false);
+                    btnStatusUpdate.setEnabled(false);
+                } else {
+                    lblStatusAlert.setText("");
 
-
-                            String statusInTextMode = getStatusInTextMode(Integer.parseInt(rowData[4]));
-                            cbOrderStatus.setSelectedItem(statusInTextMode);
-
-                            if(statusInTextMode.equals("DELIVERED")) {
-                                lblStatusAlert.setText("<html><b>This burger has already Delivered!<b/> So, you cannot update this burger...</html>");
-                                
-                                cbOrderStatus.setEnabled(false);
-                                btnStatusUpdate.setEnabled(false);
-                            } else if(statusInTextMode.equals("CANCELED")) {
-                                lblStatusAlert.setText("<html><b>This burger has already Canceled!<b/> So, you cannot update this burger...</html>");
-                                
-                                cbOrderStatus.setEnabled(false);
-                                btnStatusUpdate.setEnabled(false);
-                            } else {
-                                lblStatusAlert.setText("");
-                                
-                                cbOrderStatus.setEnabled(true);
-                                btnStatusUpdate.setEnabled(true);
-                            }
-
-                            btnBackToHomePage.setEnabled(true);
-                            break L1;
-                        } else {
-                            line = br.readLine();
-                        }
-                    }
-                    JOptionPane.showMessageDialog(this, "That's invalid! Try another.", "Invalid Burger", JOptionPane.ERROR_MESSAGE);
-                    break;
+                    cbOrderStatus.setEnabled(true);
+                    btnStatusUpdate.setEnabled(true);
                 }
-            } catch (IOException ex) {
-                Logger.getLogger(UpdateBurgerStatusFrame.class.getName()).log(Level.SEVERE, null, ex);
+
+                btnBackToHomePage.setEnabled(true);
+            } else {
+                JOptionPane.showMessageDialog(this, "That's invalid! Try another.", "Invalid Burger", JOptionPane.ERROR_MESSAGE);
+                txtSearchedID.requestFocus();
+                txtSearchedID.setText("B");
+                
+                txtCustomerID.setText("");
+                txtCustomerName.setText("");
+                
+                txtBurgerQty.setText("");
+                
+                lblTotalValue.setText("");
+                cbOrderStatus.setSelectedItem("DELIVERED");
             }
-        } catch (FileNotFoundException ex) {
+        } catch (IOException ex) {
             Logger.getLogger(UpdateBurgerStatusFrame.class.getName()).log(Level.SEVERE, null, ex);
         } finally {
-            try {
-                fr.close();
-            } catch (IOException ex) {
-                Logger.getLogger(UpdateBurgerStatusFrame.class.getName()).log(Level.SEVERE, null, ex);
-            }
+            
         }
     }//GEN-LAST:event_txtSearchedIDActionPerformed
-
-    private String getStatusInTextMode(int status) {
-        String statusInTextMode;
-        switch (status) {
-            case 0:
-                statusInTextMode="PREPARING";
-                break;
-            case 1:
-                statusInTextMode="DELIVERED";
-                break;
-            case 2:
-            default:
-                statusInTextMode="CANCELED";
-        }
-        return statusInTextMode;
-    }
     
     private void btnQTYUpdateActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_btnQTYUpdateActionPerformed
         dispose();

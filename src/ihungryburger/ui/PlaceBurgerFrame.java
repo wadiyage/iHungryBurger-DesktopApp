@@ -6,12 +6,6 @@ package ihungryburger.ui;
 
 import ihungryburger.controller.BurgerController;
 import ihungryburger.model.Burger;
-
-import java.io.BufferedReader;
-import java.io.FileNotFoundException;
-import java.io.FileReader;
-
-import java.io.FileWriter;
 import java.io.IOException;
 import java.util.logging.Level;
 import java.util.logging.Logger;
@@ -285,7 +279,7 @@ public class PlaceBurgerFrame extends javax.swing.JFrame {
         if(confirmPlace==JOptionPane.YES_OPTION) {
             try {
                 burgerController.addNewBurger(burger);
-                JOptionPane.showMessageDialog(this, "Your burger has been placed successfully!", "Order Placed!", JOptionPane.INFORMATION_MESSAGE);
+                JOptionPane.showMessageDialog(this, "Your burger has been placed successfully!", "Burger Placed", JOptionPane.INFORMATION_MESSAGE);
                 int placeAgain = JOptionPane.showConfirmDialog(this, "Do you place another burger?", "Place Burger", JOptionPane.YES_NO_OPTION, JOptionPane.QUESTION_MESSAGE);
                 if(placeAgain==JOptionPane.YES_OPTION) {
                     try {
@@ -302,6 +296,7 @@ public class PlaceBurgerFrame extends javax.swing.JFrame {
                         Logger.getLogger(PlaceBurgerFrame.class.getName()).log(Level.SEVERE, null, ex);
                     }
                 } else {
+                    JOptionPane.showMessageDialog(this, "Your burger has been canceled successfully!", "Burger Canceled", JOptionPane.INFORMATION_MESSAGE);
                     dispose();
                     new DashboardFrame().setVisible(true);
                 }
