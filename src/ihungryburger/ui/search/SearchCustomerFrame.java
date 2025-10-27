@@ -4,8 +4,18 @@
  */
 package ihungryburger.ui.search;
 
-import ihungryburger.service.BurgerCollection;
+import ihungryburger.controller.BurgerController;
 import ihungryburger.model.Burger;
+import ihungryburger.service.BurgerList;
+import ihungryburger.ui.DashboardFrame;
+import java.io.BufferedReader;
+import java.io.FileNotFoundException;
+import java.io.FileReader;
+import java.io.FileWriter;
+import java.io.IOException;
+import java.util.logging.Level;
+import java.util.logging.Logger;
+import javax.swing.JOptionPane;
 import javax.swing.table.DefaultTableModel;
 
 
@@ -14,14 +24,13 @@ import javax.swing.table.DefaultTableModel;
  * @author Dell
  */
 public class SearchCustomerFrame extends javax.swing.JFrame {
-    public BurgerCollection burgerCollection;
-    /**
-     * Creates new form DashboardFrame
-     * @param burgerCollection
-     */
-    public SearchCustomerFrame(BurgerCollection burgerCollection) {
+    public BurgerList burgerList;
+    public BurgerController burgerController;
+    
+    public SearchCustomerFrame() {
         initComponents();
-        this.burgerCollection = burgerCollection;
+        burgerList = new BurgerList();
+        burgerController = new BurgerController();
         
         txtCustomerID.setText("0");
         txtCustomerID.requestFocus();
@@ -41,14 +50,16 @@ public class SearchCustomerFrame extends javax.swing.JFrame {
         lblCustomerName = new javax.swing.JLabel();
         lblCustomerNameValue = new javax.swing.JLabel();
         btnSearch = new javax.swing.JButton();
-        btnBack = new javax.swing.JButton();
+        btnBackToHomePage = new javax.swing.JButton();
         jScrollPane1 = new javax.swing.JScrollPane();
         tblSearchBurgerDetails = new javax.swing.JTable();
         txtCustomerID = new javax.swing.JTextField();
         jPanel2 = new javax.swing.JPanel();
+        burgerIcon = new javax.swing.JLabel();
         lblWelcomeMessage = new javax.swing.JLabel();
 
-        setDefaultCloseOperation(javax.swing.WindowConstants.EXIT_ON_CLOSE);
+        setDefaultCloseOperation(javax.swing.WindowConstants.DISPOSE_ON_CLOSE);
+        setUndecorated(true);
 
         lblCustomerID.setFont(new java.awt.Font("Haettenschweiler", 0, 18)); // NOI18N
         lblCustomerID.setText("Enter Customer ID:");
@@ -63,20 +74,22 @@ public class SearchCustomerFrame extends javax.swing.JFrame {
         btnSearch.setForeground(new java.awt.Color(255, 255, 255));
         btnSearch.setText("SEARCH");
         btnSearch.setBorder(javax.swing.BorderFactory.createTitledBorder(""));
+        btnSearch.setCursor(new java.awt.Cursor(java.awt.Cursor.HAND_CURSOR));
         btnSearch.addActionListener(new java.awt.event.ActionListener() {
             public void actionPerformed(java.awt.event.ActionEvent evt) {
                 btnSearchActionPerformed(evt);
             }
         });
 
-        btnBack.setBackground(new java.awt.Color(0, 51, 255));
-        btnBack.setFont(new java.awt.Font("Haettenschweiler", 0, 18)); // NOI18N
-        btnBack.setForeground(new java.awt.Color(255, 255, 255));
-        btnBack.setText("BACK");
-        btnBack.setBorder(javax.swing.BorderFactory.createTitledBorder(""));
-        btnBack.addActionListener(new java.awt.event.ActionListener() {
+        btnBackToHomePage.setBackground(new java.awt.Color(0, 51, 255));
+        btnBackToHomePage.setFont(new java.awt.Font("Haettenschweiler", 0, 18)); // NOI18N
+        btnBackToHomePage.setForeground(new java.awt.Color(255, 255, 255));
+        btnBackToHomePage.setText(" BACK TO HOME PAGE");
+        btnBackToHomePage.setBorder(javax.swing.BorderFactory.createTitledBorder(""));
+        btnBackToHomePage.setCursor(new java.awt.Cursor(java.awt.Cursor.HAND_CURSOR));
+        btnBackToHomePage.addActionListener(new java.awt.event.ActionListener() {
             public void actionPerformed(java.awt.event.ActionEvent evt) {
-                btnBackActionPerformed(evt);
+                btnBackToHomePageActionPerformed(evt);
             }
         });
 
@@ -119,21 +132,25 @@ public class SearchCustomerFrame extends javax.swing.JFrame {
             jPanel1Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
             .addGroup(jPanel1Layout.createSequentialGroup()
                 .addGap(17, 17, 17)
-                .addGroup(jPanel1Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.TRAILING)
-                    .addComponent(btnBack, javax.swing.GroupLayout.PREFERRED_SIZE, 84, javax.swing.GroupLayout.PREFERRED_SIZE)
-                    .addGroup(jPanel1Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
-                        .addGroup(jPanel1Layout.createSequentialGroup()
-                            .addComponent(lblCustomerName)
-                            .addGap(18, 18, 18)
-                            .addComponent(lblCustomerNameValue))
-                        .addGroup(jPanel1Layout.createSequentialGroup()
-                            .addComponent(lblCustomerID)
-                            .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
-                            .addComponent(txtCustomerID, javax.swing.GroupLayout.PREFERRED_SIZE, 218, javax.swing.GroupLayout.PREFERRED_SIZE)
-                            .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
-                            .addComponent(btnSearch))
-                        .addComponent(jScrollPane1, javax.swing.GroupLayout.PREFERRED_SIZE, 585, javax.swing.GroupLayout.PREFERRED_SIZE)))
-                .addContainerGap(16, Short.MAX_VALUE))
+                .addGroup(jPanel1Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
+                    .addGroup(jPanel1Layout.createSequentialGroup()
+                        .addGroup(jPanel1Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
+                            .addGroup(jPanel1Layout.createSequentialGroup()
+                                .addComponent(lblCustomerName)
+                                .addGap(18, 18, 18)
+                                .addComponent(lblCustomerNameValue))
+                            .addGroup(jPanel1Layout.createSequentialGroup()
+                                .addComponent(lblCustomerID)
+                                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
+                                .addComponent(txtCustomerID, javax.swing.GroupLayout.PREFERRED_SIZE, 218, javax.swing.GroupLayout.PREFERRED_SIZE)
+                                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
+                                .addComponent(btnSearch, javax.swing.GroupLayout.PREFERRED_SIZE, 120, javax.swing.GroupLayout.PREFERRED_SIZE)))
+                        .addContainerGap(344, Short.MAX_VALUE))
+                    .addGroup(jPanel1Layout.createSequentialGroup()
+                        .addComponent(jScrollPane1)
+                        .addGap(18, 18, 18)
+                        .addComponent(btnBackToHomePage, javax.swing.GroupLayout.PREFERRED_SIZE, 157, javax.swing.GroupLayout.PREFERRED_SIZE)
+                        .addGap(17, 17, 17))))
         );
         jPanel1Layout.setVerticalGroup(
             jPanel1Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
@@ -142,39 +159,49 @@ public class SearchCustomerFrame extends javax.swing.JFrame {
                 .addGroup(jPanel1Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.BASELINE)
                     .addComponent(lblCustomerID)
                     .addComponent(txtCustomerID, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
-                    .addComponent(btnSearch, javax.swing.GroupLayout.PREFERRED_SIZE, 26, javax.swing.GroupLayout.PREFERRED_SIZE))
+                    .addComponent(btnSearch, javax.swing.GroupLayout.PREFERRED_SIZE, 36, javax.swing.GroupLayout.PREFERRED_SIZE))
                 .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
                 .addGroup(jPanel1Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.BASELINE)
                     .addComponent(lblCustomerName)
                     .addComponent(lblCustomerNameValue))
-                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.UNRELATED)
-                .addComponent(jScrollPane1, javax.swing.GroupLayout.DEFAULT_SIZE, 196, Short.MAX_VALUE)
-                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
-                .addComponent(btnBack)
-                .addContainerGap())
+                .addGroup(jPanel1Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
+                    .addGroup(jPanel1Layout.createSequentialGroup()
+                        .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.UNRELATED)
+                        .addComponent(jScrollPane1, javax.swing.GroupLayout.DEFAULT_SIZE, 180, Short.MAX_VALUE)
+                        .addGap(34, 34, 34))
+                    .addGroup(javax.swing.GroupLayout.Alignment.TRAILING, jPanel1Layout.createSequentialGroup()
+                        .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
+                        .addComponent(btnBackToHomePage)
+                        .addGap(15, 15, 15))))
         );
 
         jPanel2.setBackground(new java.awt.Color(102, 102, 255));
 
+        burgerIcon.setIcon(new javax.swing.ImageIcon(getClass().getResource("/resources/burger.png"))); // NOI18N
+
         lblWelcomeMessage.setFont(new java.awt.Font("Haettenschweiler", 0, 48)); // NOI18N
         lblWelcomeMessage.setForeground(new java.awt.Color(255, 255, 255));
         lblWelcomeMessage.setHorizontalAlignment(javax.swing.SwingConstants.CENTER);
-        lblWelcomeMessage.setText("SEARCH BURGER DETAILS");
+        lblWelcomeMessage.setText("Search Customer - iBurgerHungry");
 
         javax.swing.GroupLayout jPanel2Layout = new javax.swing.GroupLayout(jPanel2);
         jPanel2.setLayout(jPanel2Layout);
         jPanel2Layout.setHorizontalGroup(
             jPanel2Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
-            .addGroup(javax.swing.GroupLayout.Alignment.TRAILING, jPanel2Layout.createSequentialGroup()
-                .addContainerGap(javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
+            .addGroup(jPanel2Layout.createSequentialGroup()
+                .addGap(49, 49, 49)
+                .addComponent(burgerIcon)
+                .addGap(18, 18, 18)
                 .addComponent(lblWelcomeMessage)
-                .addGap(131, 131, 131))
+                .addContainerGap(javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE))
         );
         jPanel2Layout.setVerticalGroup(
             jPanel2Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
             .addGroup(jPanel2Layout.createSequentialGroup()
                 .addGap(14, 14, 14)
-                .addComponent(lblWelcomeMessage)
+                .addGroup(jPanel2Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
+                    .addComponent(lblWelcomeMessage)
+                    .addComponent(burgerIcon))
                 .addContainerGap(14, Short.MAX_VALUE))
         );
 
@@ -198,22 +225,41 @@ public class SearchCustomerFrame extends javax.swing.JFrame {
     }// </editor-fold>//GEN-END:initComponents
 
     private void btnSearchActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_btnSearchActionPerformed
-        String customerID = txtCustomerID.getText();
-        Burger[] burger = burgerCollection.getBurgerReference();
-        
-        DefaultTableModel dtm = (DefaultTableModel) tblSearchBurgerDetails.getModel();
-        dtm.setRowCount(0);
-        for(int i=0;i<burger.length;i++) {
-            if(burger[i].getCustomerID().equals(customerID)) {
-                Object[] rowData = {burger[i].getOrderID(),burger[i].getBurgerQty(),burger[i].getBurgerQty()*Burger.BURGERPRICE};
-                dtm.addRow(rowData);
+        FileReader fr = null;
+        try {
+            DefaultTableModel dtm = (DefaultTableModel) tblSearchBurgerDetails.getModel();
+            dtm.setRowCount(0);
+            
+            String customerID = txtCustomerID.getText();
+            
+            fr = new FileReader("data/Burger.txt");
+            BufferedReader br = new BufferedReader(fr);
+            
+            String line = br.readLine();
+            while(line!=null) {
+                String[] rowData = line.split(",");
+                if(rowData[1].equals(customerID)) {
+                    Object[] objectVisedRowData = {rowData[0],rowData[3],Integer.parseInt(rowData[3])*Burger.BURGERPRICE};
+                    dtm.addRow(objectVisedRowData);
+                }   line = br.readLine();
+            }
+        } catch (FileNotFoundException ex) {
+            Logger.getLogger(SearchCustomerFrame.class.getName()).log(Level.SEVERE, null, ex);
+        } catch (IOException ex) {
+            Logger.getLogger(SearchCustomerFrame.class.getName()).log(Level.SEVERE, null, ex);
+        } finally {
+            try {
+                fr.close();
+            } catch (IOException ex) {
+                Logger.getLogger(SearchCustomerFrame.class.getName()).log(Level.SEVERE, null, ex);
             }
         }
     }//GEN-LAST:event_btnSearchActionPerformed
 
-    private void btnBackActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_btnBackActionPerformed
+    private void btnBackToHomePageActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_btnBackToHomePageActionPerformed
         dispose();
-    }//GEN-LAST:event_btnBackActionPerformed
+        new DashboardFrame().setVisible(true);
+    }//GEN-LAST:event_btnBackToHomePageActionPerformed
 
     private void txtCustomerIDActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_txtCustomerIDActionPerformed
         btnSearch.requestFocus();
@@ -222,8 +268,9 @@ public class SearchCustomerFrame extends javax.swing.JFrame {
 
 
     // Variables declaration - do not modify//GEN-BEGIN:variables
-    private javax.swing.JButton btnBack;
+    private javax.swing.JButton btnBackToHomePage;
     private javax.swing.JButton btnSearch;
+    private javax.swing.JLabel burgerIcon;
     private javax.swing.JPanel jPanel1;
     private javax.swing.JPanel jPanel2;
     private javax.swing.JScrollPane jScrollPane1;

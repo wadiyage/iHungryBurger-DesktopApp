@@ -7,21 +7,37 @@ package ihungryburger.ui.view;
 import ihungryburger.ui.view.PreparingFrame;
 import ihungryburger.ui.view.CanceledFrame;
 import ihungryburger.ui.view.DeliveredFrame;
-import ihungryburger.service.BurgerCollection;
+import ihungryburger.service.BurgerList;
+import ihungryburger.ui.DashboardFrame;
+import java.awt.Image;
+import java.io.IOException;
+import java.util.logging.Level;
+import java.util.logging.Logger;
+import javax.swing.ImageIcon;
 
 /**
  *
  * @author Dell
  */
 public class ViewOrdersFrame extends javax.swing.JFrame {
-    public BurgerCollection burgerCollection;
-    /**
-     * Creates new form DashboardFrame
-     * @param burgerCollection
-     */
-    public ViewOrdersFrame(BurgerCollection burgerCollection) {
+    
+    public ViewOrdersFrame() throws IOException {
         initComponents();
-        this.burgerCollection = burgerCollection;
+        
+        ImageIcon originalIcon = new ImageIcon("E://BackUP4/ICD119/Data Structures & Algorithms/Day2/New folder (2)/IHungryBurger/src/resources/iHungryBurger without contiaining Texts.jpg");
+        Image originalImage = originalIcon.getImage();
+        
+        int newWidth = 810;
+        int newHeight = 390;
+        Image scaledImage = originalImage.getScaledInstance(newWidth, newHeight, Image.SCALE_SMOOTH);
+        
+        ImageIcon scaledIcon = new ImageIcon(scaledImage);
+        backgroundImage.setIcon(scaledIcon);
+        
+        viewPortalPanel.setComponentZOrder(backgroundImage, viewPortalPanel.getComponentCount() - 1);
+        viewPortalPanel.revalidate();
+        viewPortalPanel.repaint();
+
     }
 
     /**
@@ -33,133 +49,115 @@ public class ViewOrdersFrame extends javax.swing.JFrame {
     // <editor-fold defaultstate="collapsed" desc="Generated Code">//GEN-BEGIN:initComponents
     private void initComponents() {
 
-        jPanel2 = new javax.swing.JPanel();
+        viewPortalPanel = new javax.swing.JPanel();
         btnDelivered = new javax.swing.JButton();
         btnPreparing = new javax.swing.JButton();
         btnCanceled = new javax.swing.JButton();
         btnExit = new javax.swing.JButton();
         btnBackToHomePage = new javax.swing.JButton();
         lblWelcomeMessage = new javax.swing.JLabel();
-        jLabel1 = new javax.swing.JLabel();
+        burgerIcon = new javax.swing.JLabel();
+        lblWelcomeMessage1 = new javax.swing.JLabel();
+        backgroundImage = new javax.swing.JLabel();
 
-        setDefaultCloseOperation(javax.swing.WindowConstants.EXIT_ON_CLOSE);
+        setDefaultCloseOperation(javax.swing.WindowConstants.DISPOSE_ON_CLOSE);
+        setUndecorated(true);
 
-        btnDelivered.setBackground(new java.awt.Color(255, 0, 0));
+        viewPortalPanel.setLayout(new org.netbeans.lib.awtextra.AbsoluteLayout());
+
+        btnDelivered.setBackground(new java.awt.Color(255, 204, 0));
         btnDelivered.setFont(new java.awt.Font("Haettenschweiler", 0, 18)); // NOI18N
         btnDelivered.setForeground(new java.awt.Color(255, 255, 255));
         btnDelivered.setText("DELIVERED");
         btnDelivered.setBorder(javax.swing.BorderFactory.createTitledBorder(""));
+        btnDelivered.setCursor(new java.awt.Cursor(java.awt.Cursor.HAND_CURSOR));
         btnDelivered.addActionListener(new java.awt.event.ActionListener() {
             public void actionPerformed(java.awt.event.ActionEvent evt) {
                 btnDeliveredActionPerformed(evt);
             }
         });
+        viewPortalPanel.add(btnDelivered, new org.netbeans.lib.awtextra.AbsoluteConstraints(50, 170, 181, -1));
 
-        btnPreparing.setBackground(new java.awt.Color(255, 0, 0));
+        btnPreparing.setBackground(new java.awt.Color(0, 255, 0));
         btnPreparing.setFont(new java.awt.Font("Haettenschweiler", 0, 18)); // NOI18N
         btnPreparing.setForeground(new java.awt.Color(255, 255, 255));
         btnPreparing.setText("PREPARING");
         btnPreparing.setBorder(javax.swing.BorderFactory.createTitledBorder(""));
+        btnPreparing.setCursor(new java.awt.Cursor(java.awt.Cursor.HAND_CURSOR));
         btnPreparing.addActionListener(new java.awt.event.ActionListener() {
             public void actionPerformed(java.awt.event.ActionEvent evt) {
                 btnPreparingActionPerformed(evt);
             }
         });
+        viewPortalPanel.add(btnPreparing, new org.netbeans.lib.awtextra.AbsoluteConstraints(50, 210, 181, -1));
 
         btnCanceled.setBackground(new java.awt.Color(255, 0, 0));
         btnCanceled.setFont(new java.awt.Font("Haettenschweiler", 0, 18)); // NOI18N
         btnCanceled.setForeground(new java.awt.Color(255, 255, 255));
         btnCanceled.setText("CANCELED");
         btnCanceled.setBorder(javax.swing.BorderFactory.createTitledBorder(""));
+        btnCanceled.setCursor(new java.awt.Cursor(java.awt.Cursor.HAND_CURSOR));
         btnCanceled.addActionListener(new java.awt.event.ActionListener() {
             public void actionPerformed(java.awt.event.ActionEvent evt) {
                 btnCanceledActionPerformed(evt);
             }
         });
+        viewPortalPanel.add(btnCanceled, new org.netbeans.lib.awtextra.AbsoluteConstraints(50, 250, 181, -1));
 
         btnExit.setBackground(new java.awt.Color(255, 0, 0));
         btnExit.setFont(new java.awt.Font("Haettenschweiler", 0, 18)); // NOI18N
         btnExit.setForeground(new java.awt.Color(255, 255, 255));
         btnExit.setBorder(javax.swing.BorderFactory.createTitledBorder(""));
+        btnExit.setCursor(new java.awt.Cursor(java.awt.Cursor.HAND_CURSOR));
         btnExit.setLabel("EXIT");
         btnExit.addActionListener(new java.awt.event.ActionListener() {
             public void actionPerformed(java.awt.event.ActionEvent evt) {
                 btnExitActionPerformed(evt);
             }
         });
+        viewPortalPanel.add(btnExit, new org.netbeans.lib.awtextra.AbsoluteConstraints(680, 330, 84, -1));
 
         btnBackToHomePage.setBackground(new java.awt.Color(0, 51, 255));
         btnBackToHomePage.setFont(new java.awt.Font("Haettenschweiler", 0, 18)); // NOI18N
         btnBackToHomePage.setForeground(new java.awt.Color(255, 255, 255));
         btnBackToHomePage.setBorder(javax.swing.BorderFactory.createTitledBorder(""));
+        btnBackToHomePage.setCursor(new java.awt.Cursor(java.awt.Cursor.HAND_CURSOR));
         btnBackToHomePage.setLabel("BACK TO HOME PAGE");
         btnBackToHomePage.addActionListener(new java.awt.event.ActionListener() {
             public void actionPerformed(java.awt.event.ActionEvent evt) {
                 btnBackToHomePageActionPerformed(evt);
             }
         });
+        viewPortalPanel.add(btnBackToHomePage, new org.netbeans.lib.awtextra.AbsoluteConstraints(510, 330, 157, -1));
 
         lblWelcomeMessage.setFont(new java.awt.Font("Haettenschweiler", 0, 48)); // NOI18N
         lblWelcomeMessage.setForeground(new java.awt.Color(102, 102, 255));
         lblWelcomeMessage.setHorizontalAlignment(javax.swing.SwingConstants.CENTER);
-        lblWelcomeMessage.setText("iHungryBurger");
+        lblWelcomeMessage.setText("iHungryBurger - View Portal");
+        viewPortalPanel.add(lblWelcomeMessage, new org.netbeans.lib.awtextra.AbsoluteConstraints(100, 30, -1, -1));
 
-        jLabel1.setIcon(new javax.swing.ImageIcon(getClass().getResource("/resources/burger.png"))); // NOI18N
+        burgerIcon.setIcon(new javax.swing.ImageIcon(getClass().getResource("/resources/burger.png"))); // NOI18N
+        viewPortalPanel.add(burgerIcon, new org.netbeans.lib.awtextra.AbsoluteConstraints(50, 30, -1, -1));
 
-        javax.swing.GroupLayout jPanel2Layout = new javax.swing.GroupLayout(jPanel2);
-        jPanel2.setLayout(jPanel2Layout);
-        jPanel2Layout.setHorizontalGroup(
-            jPanel2Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
-            .addGroup(javax.swing.GroupLayout.Alignment.TRAILING, jPanel2Layout.createSequentialGroup()
-                .addContainerGap(javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
-                .addGroup(jPanel2Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.TRAILING)
-                    .addGroup(jPanel2Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING, false)
-                        .addComponent(btnDelivered, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
-                        .addComponent(btnPreparing, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
-                        .addComponent(btnCanceled, javax.swing.GroupLayout.PREFERRED_SIZE, 297, javax.swing.GroupLayout.PREFERRED_SIZE))
-                    .addComponent(btnBackToHomePage, javax.swing.GroupLayout.PREFERRED_SIZE, 158, javax.swing.GroupLayout.PREFERRED_SIZE))
-                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
-                .addComponent(btnExit, javax.swing.GroupLayout.PREFERRED_SIZE, 84, javax.swing.GroupLayout.PREFERRED_SIZE)
-                .addGap(20, 20, 20))
-            .addGroup(jPanel2Layout.createSequentialGroup()
-                .addGap(169, 169, 169)
-                .addComponent(lblWelcomeMessage)
-                .addGap(18, 18, 18)
-                .addComponent(jLabel1, javax.swing.GroupLayout.PREFERRED_SIZE, 44, javax.swing.GroupLayout.PREFERRED_SIZE)
-                .addContainerGap(171, Short.MAX_VALUE))
-        );
-        jPanel2Layout.setVerticalGroup(
-            jPanel2Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
-            .addGroup(jPanel2Layout.createSequentialGroup()
-                .addContainerGap(92, Short.MAX_VALUE)
-                .addGroup(jPanel2Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
-                    .addComponent(lblWelcomeMessage)
-                    .addComponent(jLabel1, javax.swing.GroupLayout.PREFERRED_SIZE, 44, javax.swing.GroupLayout.PREFERRED_SIZE))
-                .addGap(46, 46, 46)
-                .addComponent(btnDelivered)
-                .addGap(18, 18, 18)
-                .addComponent(btnPreparing)
-                .addGap(18, 18, 18)
-                .addComponent(btnCanceled)
-                .addGap(58, 58, 58)
-                .addGroup(jPanel2Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.BASELINE)
-                    .addComponent(btnBackToHomePage)
-                    .addComponent(btnExit))
-                .addGap(24, 24, 24))
-        );
+        lblWelcomeMessage1.setFont(new java.awt.Font("Haettenschweiler", 0, 24)); // NOI18N
+        lblWelcomeMessage1.setForeground(new java.awt.Color(0, 0, 204));
+        lblWelcomeMessage1.setHorizontalAlignment(javax.swing.SwingConstants.CENTER);
+        lblWelcomeMessage1.setText("Search Menu Area");
+        viewPortalPanel.add(lblWelcomeMessage1, new org.netbeans.lib.awtextra.AbsoluteConstraints(50, 120, -1, -1));
+        viewPortalPanel.add(backgroundImage, new org.netbeans.lib.awtextra.AbsoluteConstraints(0, 0, 810, 390));
 
         javax.swing.GroupLayout layout = new javax.swing.GroupLayout(getContentPane());
         getContentPane().setLayout(layout);
         layout.setHorizontalGroup(
             layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
             .addGroup(layout.createSequentialGroup()
-                .addComponent(jPanel2, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
+                .addComponent(viewPortalPanel, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
                 .addGap(0, 0, Short.MAX_VALUE))
         );
         layout.setVerticalGroup(
             layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
             .addGroup(layout.createSequentialGroup()
-                .addComponent(jPanel2, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
+                .addComponent(viewPortalPanel, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
                 .addGap(0, 0, Short.MAX_VALUE))
         );
 
@@ -169,34 +167,53 @@ public class ViewOrdersFrame extends javax.swing.JFrame {
 
     private void btnBackToHomePageActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_btnBackToHomePageActionPerformed
         dispose();
+        new DashboardFrame().setVisible(true);
     }//GEN-LAST:event_btnBackToHomePageActionPerformed
 
     private void btnExitActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_btnExitActionPerformed
         dispose();
+        new DashboardFrame().setVisible(true);
     }//GEN-LAST:event_btnExitActionPerformed
 
     private void btnDeliveredActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_btnDeliveredActionPerformed
-        new DeliveredFrame(burgerCollection).setVisible(true);
+        try {
+            dispose();
+            new DeliveredFrame().setVisible(true);
+        } catch (IOException ex) {
+            Logger.getLogger(ViewOrdersFrame.class.getName()).log(Level.SEVERE, null, ex);
+        }
     }//GEN-LAST:event_btnDeliveredActionPerformed
 
     private void btnPreparingActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_btnPreparingActionPerformed
-        new PreparingFrame(burgerCollection).setVisible(true);
+        try {
+            dispose();
+            new PreparingFrame().setVisible(true);
+        } catch (IOException ex) {
+            Logger.getLogger(ViewOrdersFrame.class.getName()).log(Level.SEVERE, null, ex);
+        }
     }//GEN-LAST:event_btnPreparingActionPerformed
 
     private void btnCanceledActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_btnCanceledActionPerformed
-        new CanceledFrame(burgerCollection).setVisible(true);
+        try {
+            dispose();
+            new CanceledFrame().setVisible(true);
+        } catch (IOException ex) {
+            Logger.getLogger(ViewOrdersFrame.class.getName()).log(Level.SEVERE, null, ex);
+        }
     }//GEN-LAST:event_btnCanceledActionPerformed
 
     
 
     // Variables declaration - do not modify//GEN-BEGIN:variables
+    private javax.swing.JLabel backgroundImage;
     private javax.swing.JButton btnBackToHomePage;
     private javax.swing.JButton btnCanceled;
     private javax.swing.JButton btnDelivered;
     private javax.swing.JButton btnExit;
     private javax.swing.JButton btnPreparing;
-    private javax.swing.JLabel jLabel1;
-    private javax.swing.JPanel jPanel2;
+    private javax.swing.JLabel burgerIcon;
     private javax.swing.JLabel lblWelcomeMessage;
+    private javax.swing.JLabel lblWelcomeMessage1;
+    private javax.swing.JPanel viewPortalPanel;
     // End of variables declaration//GEN-END:variables
 }

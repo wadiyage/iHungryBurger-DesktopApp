@@ -4,8 +4,17 @@
  */
 package ihungryburger.ui;
 
-import ihungryburger.service.BurgerCollection;
+import ihungryburger.controller.BurgerController;
 import ihungryburger.model.Burger;
+
+import java.io.BufferedReader;
+import java.io.FileNotFoundException;
+import java.io.FileReader;
+
+import java.io.FileWriter;
+import java.io.IOException;
+import java.util.logging.Level;
+import java.util.logging.Logger;
 import javax.swing.JOptionPane;
 
 /**
@@ -13,21 +22,17 @@ import javax.swing.JOptionPane;
  * @author Dell
  */
 public class PlaceBurgerFrame extends javax.swing.JFrame {
-    public BurgerCollection burgerCollection;
-    /**
-     * Creates new form DashboardFrame
-     * @param burgerCollection
-     */
+    public BurgerController burgerController;
     
-    public PlaceBurgerFrame(BurgerCollection burgerCollection) {
+    public PlaceBurgerFrame() throws IOException {
         initComponents();
-        this.burgerCollection = burgerCollection;
+        burgerController = new BurgerController();
    
         txtGeneratedID.setEditable(false);
-        txtGeneratedID.setText(burgerCollection.generateOrderID());
+        txtGeneratedID.setText(burgerController.generateBurgerID());
         
         txtCustomerID.setText("0");
-        txtCustomerID.requestFocus();
+        txtCustomerID.requestFocus();                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                        
     }
 
     /**
@@ -39,7 +44,7 @@ public class PlaceBurgerFrame extends javax.swing.JFrame {
     // <editor-fold defaultstate="collapsed" desc="Generated Code">//GEN-BEGIN:initComponents
     private void initComponents() {
 
-        jPanel1 = new javax.swing.JPanel();
+        menuAreaPanel = new javax.swing.JPanel();
         lblOrderID = new javax.swing.JLabel();
         lblCustomerID = new javax.swing.JLabel();
         lblBurgerQTY = new javax.swing.JLabel();
@@ -51,14 +56,16 @@ public class PlaceBurgerFrame extends javax.swing.JFrame {
         txtGeneratedID = new javax.swing.JTextField();
         lblNetTotal = new javax.swing.JLabel();
         lblNetTotalValue = new javax.swing.JLabel();
-        jPanel2 = new javax.swing.JPanel();
         btnPlaceOrder = new javax.swing.JButton();
         btnBackToHomePage = new javax.swing.JButton();
         btnCancel = new javax.swing.JButton();
         jPanel3 = new javax.swing.JPanel();
         lblWelcomeMessage = new javax.swing.JLabel();
+        burgerIcon = new javax.swing.JLabel();
 
-        setDefaultCloseOperation(javax.swing.WindowConstants.EXIT_ON_CLOSE);
+        setDefaultCloseOperation(javax.swing.WindowConstants.DISPOSE_ON_CLOSE);
+        setUndecorated(true);
+        setResizable(false);
 
         lblOrderID.setFont(new java.awt.Font("Haettenschweiler", 0, 18)); // NOI18N
         lblOrderID.setText("Order ID:");
@@ -100,69 +107,11 @@ public class PlaceBurgerFrame extends javax.swing.JFrame {
 
         lblNetTotalValue.setFont(new java.awt.Font("Haettenschweiler", 0, 18)); // NOI18N
 
-        javax.swing.GroupLayout jPanel1Layout = new javax.swing.GroupLayout(jPanel1);
-        jPanel1.setLayout(jPanel1Layout);
-        jPanel1Layout.setHorizontalGroup(
-            jPanel1Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
-            .addGroup(jPanel1Layout.createSequentialGroup()
-                .addGap(48, 48, 48)
-                .addGroup(jPanel1Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
-                    .addGroup(jPanel1Layout.createSequentialGroup()
-                        .addGroup(jPanel1Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
-                            .addGroup(jPanel1Layout.createSequentialGroup()
-                                .addGroup(jPanel1Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
-                                    .addComponent(lblCustomerID)
-                                    .addComponent(lblOrderID, javax.swing.GroupLayout.PREFERRED_SIZE, 77, javax.swing.GroupLayout.PREFERRED_SIZE))
-                                .addGap(22, 22, 22)
-                                .addGroup(jPanel1Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING, false)
-                                    .addComponent(txtCustomerID, javax.swing.GroupLayout.DEFAULT_SIZE, 225, Short.MAX_VALUE)
-                                    .addComponent(txtGeneratedID)))
-                            .addGroup(jPanel1Layout.createSequentialGroup()
-                                .addGroup(jPanel1Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
-                                    .addComponent(lblCustomerName)
-                                    .addComponent(lblBurgerQTY)
-                                    .addComponent(lblNetTotal, javax.swing.GroupLayout.PREFERRED_SIZE, 77, javax.swing.GroupLayout.PREFERRED_SIZE))
-                                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.UNRELATED)
-                                .addGroup(jPanel1Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING, false)
-                                    .addComponent(txtCustomerName, javax.swing.GroupLayout.DEFAULT_SIZE, 225, Short.MAX_VALUE)
-                                    .addComponent(txtBurgerQty)
-                                    .addComponent(lblNetTotalValue, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE))))
-                        .addGap(0, 0, Short.MAX_VALUE))
-                    .addComponent(jSeparator1))
-                .addContainerGap())
-        );
-        jPanel1Layout.setVerticalGroup(
-            jPanel1Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
-            .addGroup(jPanel1Layout.createSequentialGroup()
-                .addGap(24, 24, 24)
-                .addGroup(jPanel1Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.BASELINE)
-                    .addComponent(lblOrderID)
-                    .addComponent(txtGeneratedID, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE))
-                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.UNRELATED)
-                .addComponent(jSeparator1, javax.swing.GroupLayout.PREFERRED_SIZE, 10, javax.swing.GroupLayout.PREFERRED_SIZE)
-                .addGap(33, 33, 33)
-                .addGroup(jPanel1Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.BASELINE)
-                    .addComponent(lblCustomerID)
-                    .addComponent(txtCustomerID, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE))
-                .addGap(12, 12, 12)
-                .addGroup(jPanel1Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.BASELINE)
-                    .addComponent(lblCustomerName)
-                    .addComponent(txtCustomerName, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE))
-                .addGap(18, 18, 18)
-                .addGroup(jPanel1Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.BASELINE)
-                    .addComponent(lblBurgerQTY)
-                    .addComponent(txtBurgerQty, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE))
-                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.UNRELATED)
-                .addGroup(jPanel1Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.BASELINE)
-                    .addComponent(lblNetTotal)
-                    .addComponent(lblNetTotalValue))
-                .addContainerGap(javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE))
-        );
-
         btnPlaceOrder.setBackground(new java.awt.Color(51, 204, 0));
         btnPlaceOrder.setFont(new java.awt.Font("Haettenschweiler", 0, 18)); // NOI18N
         btnPlaceOrder.setForeground(new java.awt.Color(255, 255, 255));
         btnPlaceOrder.setText("PLACE ORDER");
+        btnPlaceOrder.setCursor(new java.awt.Cursor(java.awt.Cursor.HAND_CURSOR));
         btnPlaceOrder.addActionListener(new java.awt.event.ActionListener() {
             public void actionPerformed(java.awt.event.ActionEvent evt) {
                 btnPlaceOrderActionPerformed(evt);
@@ -172,6 +121,7 @@ public class PlaceBurgerFrame extends javax.swing.JFrame {
         btnBackToHomePage.setBackground(new java.awt.Color(0, 0, 255));
         btnBackToHomePage.setFont(new java.awt.Font("Haettenschweiler", 0, 18)); // NOI18N
         btnBackToHomePage.setForeground(new java.awt.Color(255, 255, 255));
+        btnBackToHomePage.setCursor(new java.awt.Cursor(java.awt.Cursor.HAND_CURSOR));
         btnBackToHomePage.setLabel("BACK TO HOME PAGE");
         btnBackToHomePage.addActionListener(new java.awt.event.ActionListener() {
             public void actionPerformed(java.awt.event.ActionEvent evt) {
@@ -182,6 +132,7 @@ public class PlaceBurgerFrame extends javax.swing.JFrame {
         btnCancel.setBackground(new java.awt.Color(255, 0, 0));
         btnCancel.setFont(new java.awt.Font("Haettenschweiler", 0, 18)); // NOI18N
         btnCancel.setForeground(new java.awt.Color(255, 255, 255));
+        btnCancel.setCursor(new java.awt.Cursor(java.awt.Cursor.HAND_CURSOR));
         btnCancel.setLabel("CANCEL");
         btnCancel.addActionListener(new java.awt.event.ActionListener() {
             public void actionPerformed(java.awt.event.ActionEvent evt) {
@@ -189,28 +140,76 @@ public class PlaceBurgerFrame extends javax.swing.JFrame {
             }
         });
 
-        javax.swing.GroupLayout jPanel2Layout = new javax.swing.GroupLayout(jPanel2);
-        jPanel2.setLayout(jPanel2Layout);
-        jPanel2Layout.setHorizontalGroup(
-            jPanel2Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
-            .addGroup(jPanel2Layout.createSequentialGroup()
-                .addContainerGap(44, Short.MAX_VALUE)
-                .addGroup(jPanel2Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.TRAILING)
-                    .addComponent(btnCancel, javax.swing.GroupLayout.PREFERRED_SIZE, 158, javax.swing.GroupLayout.PREFERRED_SIZE)
-                    .addComponent(btnBackToHomePage, javax.swing.GroupLayout.PREFERRED_SIZE, 158, javax.swing.GroupLayout.PREFERRED_SIZE)
-                    .addComponent(btnPlaceOrder, javax.swing.GroupLayout.PREFERRED_SIZE, 158, javax.swing.GroupLayout.PREFERRED_SIZE))
-                .addContainerGap(32, Short.MAX_VALUE))
+        javax.swing.GroupLayout menuAreaPanelLayout = new javax.swing.GroupLayout(menuAreaPanel);
+        menuAreaPanel.setLayout(menuAreaPanelLayout);
+        menuAreaPanelLayout.setHorizontalGroup(
+            menuAreaPanelLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
+            .addGroup(menuAreaPanelLayout.createSequentialGroup()
+                .addGap(46, 46, 46)
+                .addGroup(menuAreaPanelLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
+                    .addGroup(menuAreaPanelLayout.createSequentialGroup()
+                        .addGroup(menuAreaPanelLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.TRAILING)
+                            .addComponent(jSeparator1, javax.swing.GroupLayout.Alignment.LEADING)
+                            .addGroup(javax.swing.GroupLayout.Alignment.LEADING, menuAreaPanelLayout.createSequentialGroup()
+                                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
+                                .addComponent(btnBackToHomePage, javax.swing.GroupLayout.PREFERRED_SIZE, 158, javax.swing.GroupLayout.PREFERRED_SIZE)
+                                .addGap(31, 31, 31)
+                                .addComponent(btnCancel, javax.swing.GroupLayout.PREFERRED_SIZE, 158, javax.swing.GroupLayout.PREFERRED_SIZE)))
+                        .addGap(24, 24, 24))
+                    .addGroup(menuAreaPanelLayout.createSequentialGroup()
+                        .addGroup(menuAreaPanelLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING, false)
+                            .addGroup(menuAreaPanelLayout.createSequentialGroup()
+                                .addComponent(lblOrderID, javax.swing.GroupLayout.PREFERRED_SIZE, 77, javax.swing.GroupLayout.PREFERRED_SIZE)
+                                .addGap(18, 18, 18)
+                                .addComponent(txtGeneratedID, javax.swing.GroupLayout.PREFERRED_SIZE, 229, javax.swing.GroupLayout.PREFERRED_SIZE))
+                            .addGroup(menuAreaPanelLayout.createSequentialGroup()
+                                .addGroup(menuAreaPanelLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
+                                    .addComponent(lblCustomerName)
+                                    .addComponent(lblBurgerQTY)
+                                    .addComponent(lblNetTotal, javax.swing.GroupLayout.PREFERRED_SIZE, 77, javax.swing.GroupLayout.PREFERRED_SIZE))
+                                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.UNRELATED)
+                                .addGroup(menuAreaPanelLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING, false)
+                                    .addComponent(txtCustomerName, javax.swing.GroupLayout.PREFERRED_SIZE, 225, javax.swing.GroupLayout.PREFERRED_SIZE)
+                                    .addComponent(txtBurgerQty, javax.swing.GroupLayout.PREFERRED_SIZE, 225, javax.swing.GroupLayout.PREFERRED_SIZE)
+                                    .addComponent(lblNetTotalValue, javax.swing.GroupLayout.PREFERRED_SIZE, 225, javax.swing.GroupLayout.PREFERRED_SIZE)))
+                            .addGroup(menuAreaPanelLayout.createSequentialGroup()
+                                .addComponent(lblCustomerID)
+                                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
+                                .addComponent(txtCustomerID, javax.swing.GroupLayout.PREFERRED_SIZE, 225, javax.swing.GroupLayout.PREFERRED_SIZE))
+                            .addComponent(btnPlaceOrder, javax.swing.GroupLayout.Alignment.TRAILING, javax.swing.GroupLayout.PREFERRED_SIZE, 158, javax.swing.GroupLayout.PREFERRED_SIZE))
+                        .addContainerGap(javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE))))
         );
-        jPanel2Layout.setVerticalGroup(
-            jPanel2Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
-            .addGroup(jPanel2Layout.createSequentialGroup()
-                .addGap(140, 140, 140)
-                .addComponent(btnPlaceOrder)
-                .addGap(78, 78, 78)
-                .addComponent(btnBackToHomePage)
+        menuAreaPanelLayout.setVerticalGroup(
+            menuAreaPanelLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
+            .addGroup(menuAreaPanelLayout.createSequentialGroup()
+                .addGap(30, 30, 30)
+                .addGroup(menuAreaPanelLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.BASELINE)
+                    .addComponent(lblOrderID)
+                    .addComponent(txtGeneratedID, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE))
+                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.UNRELATED)
+                .addComponent(jSeparator1, javax.swing.GroupLayout.PREFERRED_SIZE, 10, javax.swing.GroupLayout.PREFERRED_SIZE)
+                .addGap(18, 18, 18)
+                .addGroup(menuAreaPanelLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.BASELINE)
+                    .addComponent(lblCustomerID)
+                    .addComponent(txtCustomerID, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE))
+                .addGap(12, 12, 12)
+                .addGroup(menuAreaPanelLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.BASELINE)
+                    .addComponent(lblCustomerName)
+                    .addComponent(txtCustomerName, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE))
+                .addGap(18, 18, 18)
+                .addGroup(menuAreaPanelLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.BASELINE)
+                    .addComponent(lblBurgerQTY)
+                    .addComponent(txtBurgerQty, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE))
+                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.UNRELATED)
+                .addGroup(menuAreaPanelLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.BASELINE)
+                    .addComponent(lblNetTotal)
+                    .addComponent(lblNetTotalValue))
                 .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
-                .addComponent(btnCancel)
-                .addContainerGap(javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE))
+                .addGroup(menuAreaPanelLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.BASELINE)
+                    .addComponent(btnPlaceOrder)
+                    .addComponent(btnBackToHomePage)
+                    .addComponent(btnCancel))
+                .addContainerGap(15, Short.MAX_VALUE))
         );
 
         jPanel3.setBackground(new java.awt.Color(102, 102, 255));
@@ -218,22 +217,28 @@ public class PlaceBurgerFrame extends javax.swing.JFrame {
         lblWelcomeMessage.setFont(new java.awt.Font("Haettenschweiler", 0, 48)); // NOI18N
         lblWelcomeMessage.setForeground(new java.awt.Color(255, 255, 255));
         lblWelcomeMessage.setHorizontalAlignment(javax.swing.SwingConstants.CENTER);
-        lblWelcomeMessage.setText("PLACE BURGER");
+        lblWelcomeMessage.setText("iBurgerHungry - Place Order");
+
+        burgerIcon.setIcon(new javax.swing.ImageIcon(getClass().getResource("/resources/burger.png"))); // NOI18N
 
         javax.swing.GroupLayout jPanel3Layout = new javax.swing.GroupLayout(jPanel3);
         jPanel3.setLayout(jPanel3Layout);
         jPanel3Layout.setHorizontalGroup(
             jPanel3Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
             .addGroup(jPanel3Layout.createSequentialGroup()
-                .addGap(199, 199, 199)
+                .addGap(49, 49, 49)
+                .addComponent(burgerIcon)
+                .addGap(18, 18, 18)
                 .addComponent(lblWelcomeMessage)
-                .addContainerGap(javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE))
+                .addContainerGap(282, Short.MAX_VALUE))
         );
         jPanel3Layout.setVerticalGroup(
             jPanel3Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
             .addGroup(jPanel3Layout.createSequentialGroup()
                 .addGap(14, 14, 14)
-                .addComponent(lblWelcomeMessage)
+                .addGroup(jPanel3Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
+                    .addComponent(lblWelcomeMessage)
+                    .addComponent(burgerIcon))
                 .addContainerGap(14, Short.MAX_VALUE))
         );
 
@@ -241,28 +246,24 @@ public class PlaceBurgerFrame extends javax.swing.JFrame {
         getContentPane().setLayout(layout);
         layout.setHorizontalGroup(
             layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
-            .addGroup(layout.createSequentialGroup()
-                .addComponent(jPanel1, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
-                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
-                .addComponent(jPanel2, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE))
             .addComponent(jPanel3, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
+            .addComponent(menuAreaPanel, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
         );
         layout.setVerticalGroup(
             layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
             .addGroup(layout.createSequentialGroup()
                 .addComponent(jPanel3, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
                 .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
-                .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
-                    .addComponent(jPanel1, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
-                    .addComponent(jPanel2, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)))
+                .addComponent(menuAreaPanel, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE))
         );
 
         pack();
         setLocationRelativeTo(null);
     }// </editor-fold>//GEN-END:initComponents
-
+    
     private void btnCancelActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_btnCancelActionPerformed
         dispose();
+        new DashboardFrame().setVisible(true);
     }//GEN-LAST:event_btnCancelActionPerformed
 
     private void btnPlaceOrderActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_btnPlaceOrderActionPerformed
@@ -270,64 +271,91 @@ public class PlaceBurgerFrame extends javax.swing.JFrame {
         
         String customerID = txtCustomerID.getText();
         String customerName = txtCustomerName.getText();
-        int burgerQty = Integer.parseInt(txtBurgerQty.getText());
+        int burgerQty = 0;
+        try {
+            burgerQty = Integer.parseInt(txtBurgerQty.getText());
+        } catch (NumberFormatException e) {
+            System.out.println("Error: Invalid number format in String.");
+        } 
         double totalValue = Burger.BURGERPRICE*burgerQty;
         lblNetTotalValue.setText(String.valueOf(totalValue));
 
         Burger burger = new Burger(generatedID,customerID,customerName,burgerQty,Burger.PREPARING);
         int confirmPlace = JOptionPane.showConfirmDialog(this, "You're about to place the burger?", "Confirm Burger", JOptionPane.YES_NO_OPTION, JOptionPane.QUESTION_MESSAGE);
         if(confirmPlace==JOptionPane.YES_OPTION) {
-            burgerCollection.addBurger(burger);
-            JOptionPane.showMessageDialog(this, "Your burger has been placed successfully!", "Order Placed!", JOptionPane.INFORMATION_MESSAGE);
+            try {
+                burgerController.addNewBurger(burger);
+                JOptionPane.showMessageDialog(this, "Your burger has been placed successfully!", "Order Placed!", JOptionPane.INFORMATION_MESSAGE);
+                int placeAgain = JOptionPane.showConfirmDialog(this, "Do you place another burger?", "Place Burger", JOptionPane.YES_NO_OPTION, JOptionPane.QUESTION_MESSAGE);
+                if(placeAgain==JOptionPane.YES_OPTION) {
+                    try {
+                        txtGeneratedID.setText(burgerController.generateBurgerID());
 
-            int placeAgain = JOptionPane.showConfirmDialog(this, "Do you place another burger?", "Place Burger", JOptionPane.YES_NO_OPTION, JOptionPane.QUESTION_MESSAGE);
-            if(placeAgain==JOptionPane.YES_OPTION) {
-                txtGeneratedID.setText(burgerCollection.generateOrderID());
-                
-                txtCustomerID.setText("0");
-                txtCustomerName.setText("");
+                        txtCustomerID.setText("0");
+                        txtCustomerName.setText("");
 
-                txtBurgerQty.setText("");
-                lblNetTotalValue.setText("");
-                
-                txtCustomerID.requestFocus();
-            } else {
-                dispose();
+                        txtBurgerQty.setText("");
+                        lblNetTotalValue.setText("");
+
+                        txtCustomerID.requestFocus();
+                    } catch (IOException ex) {
+                        Logger.getLogger(PlaceBurgerFrame.class.getName()).log(Level.SEVERE, null, ex);
+                    }
+                } else {
+                    dispose();
+                    new DashboardFrame().setVisible(true);
+                }
+            } catch (IOException ex) {
+                Logger.getLogger(PlaceBurgerFrame.class.getName()).log(Level.SEVERE, null, ex);
             }
         } else {
             dispose();
+            new DashboardFrame().setVisible(true);
         }
         
     }//GEN-LAST:event_btnPlaceOrderActionPerformed
 
     private void btnBackToHomePageActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_btnBackToHomePageActionPerformed
         dispose();
+        new DashboardFrame().setVisible(true);
     }//GEN-LAST:event_btnBackToHomePageActionPerformed
 
     private void txtCustomerIDActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_txtCustomerIDActionPerformed
         String customerID = txtCustomerID.getText();
-        if(burgerCollection.isValidatedCustomerID(customerID) && burgerCollection.isValidatedPhoneNumber(customerID)) {
-            int index = burgerCollection.indexOf(customerID);
-            String customerName;
-            if(index!=-1) {
-                customerName = burgerCollection.extractedName(index);
-                txtCustomerName.setText(customerName);
-                txtBurgerQty.requestFocus();
-            } else {
-                txtCustomerName.requestFocus();
-            }
+        if(burgerController.isValidatedCustomerID(customerID) && burgerController.isValidatedPhoneNumber(customerID)) {
+            try {
+                if(burgerController.haveAlreadyOrdered(customerID)) {
+                    String customerName = burgerController.searchCustomer(customerID);
+                    txtCustomerName.setText(customerName);
+                    txtBurgerQty.requestFocus();
+                } else {
+                    txtCustomerName.requestFocus();
+                }
+            } catch (IOException ex) {
+                Logger.getLogger(PlaceBurgerFrame.class.getName()).log(Level.SEVERE, null, ex);
+            } 
         } else {
             JOptionPane.showMessageDialog(this, "Please enter a valid 10-digit number starting with 0.", "Invalid Phone Number", JOptionPane.ERROR_MESSAGE);
         }
     }//GEN-LAST:event_txtCustomerIDActionPerformed
-
+    
     private void txtBurgerQtyActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_txtBurgerQtyActionPerformed
-        int burgerQty = Integer.parseInt(txtBurgerQty.getText());
-        if(burgerQty>0) {
-            btnPlaceOrder.requestFocusInWindow();
-            btnPlaceOrder.doClick();
-        } else {
-            JOptionPane.showMessageDialog(this, "The burger quantity must be greater than 0. Please enter a valid number.", "Invalid Quantity", JOptionPane.ERROR_MESSAGE);
+        int burgerQty = 0;
+        try {
+            burgerQty = Integer.parseInt(txtBurgerQty.getText());
+            if(burgerQty>0) {
+                double totalValue = Burger.BURGERPRICE*burgerQty;
+                lblNetTotalValue.setText(String.valueOf(totalValue));
+
+                btnPlaceOrder.requestFocusInWindow();
+                btnPlaceOrder.doClick();
+            } else {
+                JOptionPane.showMessageDialog(this, "The burger quantity must be greater than 0. Please enter a valid number.", "Invalid Quantity", JOptionPane.ERROR_MESSAGE);
+                txtBurgerQty.setText("");
+            }
+        } catch (NumberFormatException e) {
+            System.out.println("Error: Invalid number format in String.");
+            JOptionPane.showMessageDialog(this, "You cannot continue without entering a number.", "Skip", JOptionPane.ERROR_MESSAGE);
         } 
     }//GEN-LAST:event_txtBurgerQtyActionPerformed
 
@@ -340,8 +368,7 @@ public class PlaceBurgerFrame extends javax.swing.JFrame {
     private javax.swing.JButton btnBackToHomePage;
     private javax.swing.JButton btnCancel;
     private javax.swing.JButton btnPlaceOrder;
-    private javax.swing.JPanel jPanel1;
-    private javax.swing.JPanel jPanel2;
+    private javax.swing.JLabel burgerIcon;
     private javax.swing.JPanel jPanel3;
     private javax.swing.JSeparator jSeparator1;
     private javax.swing.JLabel lblBurgerQTY;
@@ -351,6 +378,7 @@ public class PlaceBurgerFrame extends javax.swing.JFrame {
     private javax.swing.JLabel lblNetTotalValue;
     private javax.swing.JLabel lblOrderID;
     private javax.swing.JLabel lblWelcomeMessage;
+    private javax.swing.JPanel menuAreaPanel;
     private javax.swing.JTextField txtBurgerQty;
     private javax.swing.JTextField txtCustomerID;
     private javax.swing.JTextField txtCustomerName;

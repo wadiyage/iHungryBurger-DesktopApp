@@ -7,20 +7,37 @@ package ihungryburger.ui;
 import ihungryburger.ui.view.ViewOrdersFrame;
 import ihungryburger.ui.update.UpdateBurgerStatusFrame;
 import ihungryburger.ui.search.SearchFrame;
-import ihungryburger.service.BurgerCollection;
+import java.awt.Image;
+import java.io.IOException;
+import java.util.logging.Level;
+import java.util.logging.Logger;
+import javax.swing.ImageIcon;
 
 /**
  *
  * @author Dell
  */
 public class DashboardFrame extends javax.swing.JFrame {
-    public BurgerCollection burgerCollection;
     /**
      * Creates new form DashboardFrame
      */
     public DashboardFrame() {
         initComponents();
-        this.burgerCollection = new BurgerCollection();
+        
+        ImageIcon originalIcon = new ImageIcon("E://BackUP4/ICD119/Data Structures & Algorithms/Day2/New folder (2)/IHungryBurger/src/resources/iHungryBurger.jpg");
+        Image originalImage = originalIcon.getImage();
+        
+        int newWidth = 810;
+        int newHeight = 390;
+        Image scaledImage = originalImage.getScaledInstance(newWidth, newHeight, Image.SCALE_SMOOTH);
+        
+        ImageIcon scaledIcon = new ImageIcon(scaledImage);
+        backgroundImage.setIcon(scaledIcon);
+        
+        dashboardPanel.setComponentZOrder(backgroundImage, dashboardPanel.getComponentCount() - 1);
+        dashboardPanel.revalidate();
+        dashboardPanel.repaint();
+
     }
 
     /**
@@ -32,38 +49,30 @@ public class DashboardFrame extends javax.swing.JFrame {
     // <editor-fold defaultstate="collapsed" desc="Generated Code">//GEN-BEGIN:initComponents
     private void initComponents() {
 
-        jPanel1 = new javax.swing.JPanel();
-        jLabel2 = new javax.swing.JLabel();
-        jPanel2 = new javax.swing.JPanel();
+        dashboardPanel = new javax.swing.JPanel();
+        lblWelcomeMessage = new javax.swing.JLabel();
+        burgerIcon = new javax.swing.JLabel();
         btnPlaceOrder = new javax.swing.JButton();
         btnSearch = new javax.swing.JButton();
         btnViewOrders = new javax.swing.JButton();
         btnUpdateOrderDetails = new javax.swing.JButton();
         btnExit = new javax.swing.JButton();
-        jPanel3 = new javax.swing.JPanel();
-        lblWelcomeMessage = new javax.swing.JLabel();
-        jLabel1 = new javax.swing.JLabel();
+        footer = new javax.swing.JLabel();
+        backgroundImage = new javax.swing.JLabel();
 
         setDefaultCloseOperation(javax.swing.WindowConstants.EXIT_ON_CLOSE);
+        setUndecorated(true);
 
-        jLabel2.setIcon(new javax.swing.ImageIcon(getClass().getResource("/resources/iHungryBurger.jpg"))); // NOI18N
+        dashboardPanel.setLayout(new org.netbeans.lib.awtextra.AbsoluteLayout());
 
-        javax.swing.GroupLayout jPanel1Layout = new javax.swing.GroupLayout(jPanel1);
-        jPanel1.setLayout(jPanel1Layout);
-        jPanel1Layout.setHorizontalGroup(
-            jPanel1Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
-            .addGroup(jPanel1Layout.createSequentialGroup()
-                .addGap(55, 55, 55)
-                .addComponent(jLabel2, javax.swing.GroupLayout.PREFERRED_SIZE, 290, javax.swing.GroupLayout.PREFERRED_SIZE)
-                .addContainerGap(93, Short.MAX_VALUE))
-        );
-        jPanel1Layout.setVerticalGroup(
-            jPanel1Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
-            .addGroup(jPanel1Layout.createSequentialGroup()
-                .addContainerGap()
-                .addComponent(jLabel2, javax.swing.GroupLayout.PREFERRED_SIZE, 290, javax.swing.GroupLayout.PREFERRED_SIZE)
-                .addContainerGap(22, Short.MAX_VALUE))
-        );
+        lblWelcomeMessage.setFont(new java.awt.Font("Haettenschweiler", 0, 48)); // NOI18N
+        lblWelcomeMessage.setForeground(new java.awt.Color(102, 102, 255));
+        lblWelcomeMessage.setHorizontalAlignment(javax.swing.SwingConstants.CENTER);
+        lblWelcomeMessage.setText("iHungryBurger");
+        dashboardPanel.add(lblWelcomeMessage, new org.netbeans.lib.awtextra.AbsoluteConstraints(61, 6, -1, -1));
+
+        burgerIcon.setIcon(new javax.swing.ImageIcon(getClass().getResource("/resources/burger.png"))); // NOI18N
+        dashboardPanel.add(burgerIcon, new org.netbeans.lib.awtextra.AbsoluteConstraints(289, 14, -1, -1));
 
         btnPlaceOrder.setBackground(new java.awt.Color(51, 204, 0));
         btnPlaceOrder.setFont(new java.awt.Font("Haettenschweiler", 0, 18)); // NOI18N
@@ -75,6 +84,7 @@ public class DashboardFrame extends javax.swing.JFrame {
                 btnPlaceOrderActionPerformed(evt);
             }
         });
+        dashboardPanel.add(btnPlaceOrder, new org.netbeans.lib.awtextra.AbsoluteConstraints(10, 310, 150, -1));
 
         btnSearch.setBackground(new java.awt.Color(255, 255, 0));
         btnSearch.setFont(new java.awt.Font("Haettenschweiler", 0, 18)); // NOI18N
@@ -86,6 +96,7 @@ public class DashboardFrame extends javax.swing.JFrame {
                 btnSearchActionPerformed(evt);
             }
         });
+        dashboardPanel.add(btnSearch, new org.netbeans.lib.awtextra.AbsoluteConstraints(170, 310, 150, -1));
 
         btnViewOrders.setBackground(new java.awt.Color(0, 255, 255));
         btnViewOrders.setFont(new java.awt.Font("Haettenschweiler", 0, 18)); // NOI18N
@@ -97,6 +108,7 @@ public class DashboardFrame extends javax.swing.JFrame {
                 btnViewOrdersActionPerformed(evt);
             }
         });
+        dashboardPanel.add(btnViewOrders, new org.netbeans.lib.awtextra.AbsoluteConstraints(330, 310, 150, -1));
 
         btnUpdateOrderDetails.setBackground(new java.awt.Color(255, 0, 255));
         btnUpdateOrderDetails.setFont(new java.awt.Font("Haettenschweiler", 0, 18)); // NOI18N
@@ -108,6 +120,7 @@ public class DashboardFrame extends javax.swing.JFrame {
                 btnUpdateOrderDetailsActionPerformed(evt);
             }
         });
+        dashboardPanel.add(btnUpdateOrderDetails, new org.netbeans.lib.awtextra.AbsoluteConstraints(490, 310, 150, -1));
 
         btnExit.setBackground(new java.awt.Color(255, 0, 0));
         btnExit.setFont(new java.awt.Font("Haettenschweiler", 0, 18)); // NOI18N
@@ -120,83 +133,29 @@ public class DashboardFrame extends javax.swing.JFrame {
                 btnExitActionPerformed(evt);
             }
         });
+        dashboardPanel.add(btnExit, new org.netbeans.lib.awtextra.AbsoluteConstraints(650, 310, 150, -1));
 
-        javax.swing.GroupLayout jPanel2Layout = new javax.swing.GroupLayout(jPanel2);
-        jPanel2.setLayout(jPanel2Layout);
-        jPanel2Layout.setHorizontalGroup(
-            jPanel2Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
-            .addGroup(javax.swing.GroupLayout.Alignment.TRAILING, jPanel2Layout.createSequentialGroup()
-                .addContainerGap(55, Short.MAX_VALUE)
-                .addGroup(jPanel2Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING, false)
-                    .addComponent(btnViewOrders, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
-                    .addComponent(btnSearch, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
-                    .addComponent(btnPlaceOrder, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
-                    .addComponent(btnUpdateOrderDetails, javax.swing.GroupLayout.DEFAULT_SIZE, 158, Short.MAX_VALUE)
-                    .addComponent(btnExit, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE))
-                .addGap(37, 37, 37))
-        );
-        jPanel2Layout.setVerticalGroup(
-            jPanel2Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
-            .addGroup(jPanel2Layout.createSequentialGroup()
-                .addContainerGap(javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
-                .addComponent(btnPlaceOrder)
-                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.UNRELATED)
-                .addComponent(btnSearch)
-                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.UNRELATED)
-                .addComponent(btnViewOrders)
-                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.UNRELATED)
-                .addComponent(btnUpdateOrderDetails)
-                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.UNRELATED)
-                .addComponent(btnExit)
-                .addGap(38, 38, 38))
-        );
-
-        lblWelcomeMessage.setFont(new java.awt.Font("Haettenschweiler", 0, 48)); // NOI18N
-        lblWelcomeMessage.setForeground(new java.awt.Color(102, 102, 255));
-        lblWelcomeMessage.setHorizontalAlignment(javax.swing.SwingConstants.CENTER);
-        lblWelcomeMessage.setText("iHungryBurger");
-
-        jLabel1.setIcon(new javax.swing.ImageIcon(getClass().getResource("/resources/burger.png"))); // NOI18N
-
-        javax.swing.GroupLayout jPanel3Layout = new javax.swing.GroupLayout(jPanel3);
-        jPanel3.setLayout(jPanel3Layout);
-        jPanel3Layout.setHorizontalGroup(
-            jPanel3Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
-            .addGroup(jPanel3Layout.createSequentialGroup()
-                .addGap(194, 194, 194)
-                .addComponent(lblWelcomeMessage)
-                .addGap(18, 18, 18)
-                .addComponent(jLabel1, javax.swing.GroupLayout.PREFERRED_SIZE, 44, javax.swing.GroupLayout.PREFERRED_SIZE)
-                .addContainerGap(javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE))
-        );
-        jPanel3Layout.setVerticalGroup(
-            jPanel3Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
-            .addGroup(jPanel3Layout.createSequentialGroup()
-                .addGap(14, 14, 14)
-                .addGroup(jPanel3Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
-                    .addComponent(lblWelcomeMessage)
-                    .addComponent(jLabel1, javax.swing.GroupLayout.PREFERRED_SIZE, 44, javax.swing.GroupLayout.PREFERRED_SIZE))
-                .addContainerGap(javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE))
-        );
+        footer.setFont(new java.awt.Font("Haettenschweiler", 0, 18)); // NOI18N
+        footer.setForeground(new java.awt.Color(255, 255, 255));
+        footer.setText("© 2025 iHungryBurger Inc | Version 3.0");
+        dashboardPanel.add(footer, new org.netbeans.lib.awtextra.AbsoluteConstraints(10, 350, 462, 35));
+        dashboardPanel.add(backgroundImage, new org.netbeans.lib.awtextra.AbsoluteConstraints(0, 0, 810, 390));
 
         javax.swing.GroupLayout layout = new javax.swing.GroupLayout(getContentPane());
         getContentPane().setLayout(layout);
         layout.setHorizontalGroup(
             layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
             .addGroup(layout.createSequentialGroup()
-                .addComponent(jPanel1, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
-                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
-                .addComponent(jPanel2, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE))
-            .addComponent(jPanel3, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
+                .addGap(0, 0, Short.MAX_VALUE)
+                .addComponent(dashboardPanel, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
+                .addGap(0, 0, Short.MAX_VALUE))
         );
         layout.setVerticalGroup(
             layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
             .addGroup(layout.createSequentialGroup()
-                .addComponent(jPanel3, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
-                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
-                .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
-                    .addComponent(jPanel1, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
-                    .addComponent(jPanel2, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)))
+                .addGap(0, 0, Short.MAX_VALUE)
+                .addComponent(dashboardPanel, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
+                .addGap(0, 0, Short.MAX_VALUE))
         );
 
         pack();
@@ -208,19 +167,31 @@ public class DashboardFrame extends javax.swing.JFrame {
     }//GEN-LAST:event_btnExitActionPerformed
 
     private void btnPlaceOrderActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_btnPlaceOrderActionPerformed
-        new PlaceBurgerFrame(burgerCollection).setVisible(true);
+        dispose();
+        try {
+            new PlaceBurgerFrame().setVisible(true);
+        } catch (IOException ex) {
+            Logger.getLogger(DashboardFrame.class.getName()).log(Level.SEVERE, null, ex);
+        }
     }//GEN-LAST:event_btnPlaceOrderActionPerformed
 
     private void btnSearchActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_btnSearchActionPerformed
-        new SearchFrame(burgerCollection).setVisible(true);
+        dispose();
+        new SearchFrame().setVisible(true);
     }//GEN-LAST:event_btnSearchActionPerformed
 
     private void btnViewOrdersActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_btnViewOrdersActionPerformed
-        new ViewOrdersFrame(burgerCollection).setVisible(true);
+        try {
+            dispose();
+            new ViewOrdersFrame().setVisible(true);
+        } catch (IOException ex) {
+            Logger.getLogger(DashboardFrame.class.getName()).log(Level.SEVERE, null, ex);
+        }
     }//GEN-LAST:event_btnViewOrdersActionPerformed
 
     private void btnUpdateOrderDetailsActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_btnUpdateOrderDetailsActionPerformed
-        new UpdateBurgerStatusFrame(burgerCollection).setVisible(true);
+        dispose();
+        new UpdateBurgerStatusFrame().setVisible(true);
     }//GEN-LAST:event_btnUpdateOrderDetailsActionPerformed
     
     /**
@@ -259,16 +230,15 @@ public class DashboardFrame extends javax.swing.JFrame {
     }
 
     // Variables declaration - do not modify//GEN-BEGIN:variables
+    private javax.swing.JLabel backgroundImage;
     private javax.swing.JButton btnExit;
     private javax.swing.JButton btnPlaceOrder;
     private javax.swing.JButton btnSearch;
     private javax.swing.JButton btnUpdateOrderDetails;
     private javax.swing.JButton btnViewOrders;
-    private javax.swing.JLabel jLabel1;
-    private javax.swing.JLabel jLabel2;
-    private javax.swing.JPanel jPanel1;
-    private javax.swing.JPanel jPanel2;
-    private javax.swing.JPanel jPanel3;
+    private javax.swing.JLabel burgerIcon;
+    private javax.swing.JPanel dashboardPanel;
+    private javax.swing.JLabel footer;
     private javax.swing.JLabel lblWelcomeMessage;
     // End of variables declaration//GEN-END:variables
 }

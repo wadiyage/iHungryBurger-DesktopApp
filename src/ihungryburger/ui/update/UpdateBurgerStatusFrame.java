@@ -4,8 +4,18 @@
  */
 package ihungryburger.ui.update;
 
-import ihungryburger.service.BurgerCollection;
+import ihungryburger.controller.BurgerController;
 import ihungryburger.model.Burger;
+import ihungryburger.service.BurgerList;
+import ihungryburger.ui.DashboardFrame;
+import java.io.BufferedReader;
+import java.io.File;
+import java.io.FileNotFoundException;
+import java.io.FileReader;
+import java.io.FileWriter;
+import java.io.IOException;
+import java.util.logging.Level;
+import java.util.logging.Logger;
 import javax.swing.JOptionPane;
 
 /**
@@ -13,15 +23,13 @@ import javax.swing.JOptionPane;
  * @author Dell
  */
 public class UpdateBurgerStatusFrame extends javax.swing.JFrame {
-    public BurgerCollection burgerCollection;
-    /**
-     * Creates new form DashboardFrame
-     * @param burgerCollection
-     */
+    public BurgerList burgerList;
+    public BurgerController burgerController;
     
-    public UpdateBurgerStatusFrame(BurgerCollection burgerCollection) {
+    public UpdateBurgerStatusFrame() {
         initComponents();
-        this.burgerCollection = burgerCollection;
+        burgerList = new BurgerList();
+        burgerController = new BurgerController();
         
         cbOrderStatus.setEnabled(false);
         txtSearchedID.setText("B");
@@ -31,7 +39,9 @@ public class UpdateBurgerStatusFrame extends javax.swing.JFrame {
         txtCustomerName.setEnabled(false);
         txtBurgerQty.setEnabled(false);
         
-        btnQTYUpdate.setEnabled(false);
+        lblTotalValue.setEnabled(false);
+        
+        btnStatusUpdate.setEnabled(false);
     }
 
     /**
@@ -56,16 +66,18 @@ public class UpdateBurgerStatusFrame extends javax.swing.JFrame {
         txtSearchedID = new javax.swing.JTextField();
         lblTotal = new javax.swing.JLabel();
         cbOrderStatus = new javax.swing.JComboBox<>();
-        lblStatusAlert = new javax.swing.JLabel();
         jSeparator2 = new javax.swing.JSeparator();
-        jPanel3 = new javax.swing.JPanel();
-        lblWelcomeMessage = new javax.swing.JLabel();
         jPanel2 = new javax.swing.JPanel();
         btnBackToHomePage = new javax.swing.JButton();
         btnQTYUpdate = new javax.swing.JButton();
         btnStatusUpdate = new javax.swing.JButton();
+        lblStatusAlert = new javax.swing.JLabel();
+        jPanel3 = new javax.swing.JPanel();
+        lblWelcomeMessage = new javax.swing.JLabel();
+        burgerIcon = new javax.swing.JLabel();
 
-        setDefaultCloseOperation(javax.swing.WindowConstants.EXIT_ON_CLOSE);
+        setDefaultCloseOperation(javax.swing.WindowConstants.DISPOSE_ON_CLOSE);
+        setUndecorated(true);
         setResizable(false);
 
         lblOrderID.setFont(new java.awt.Font("Haettenschweiler", 0, 18)); // NOI18N
@@ -103,9 +115,11 @@ public class UpdateBurgerStatusFrame extends javax.swing.JFrame {
 
         cbOrderStatus.setFont(new java.awt.Font("Haettenschweiler", 0, 18)); // NOI18N
         cbOrderStatus.setModel(new javax.swing.DefaultComboBoxModel<>(new String[] { "DELIVERED", "PREPARING", "CANCELED" }));
-
-        lblStatusAlert.setFont(new java.awt.Font("News701 BT", 0, 9)); // NOI18N
-        lblStatusAlert.setForeground(new java.awt.Color(255, 51, 51));
+        cbOrderStatus.addActionListener(new java.awt.event.ActionListener() {
+            public void actionPerformed(java.awt.event.ActionEvent evt) {
+                cbOrderStatusActionPerformed(evt);
+            }
+        });
 
         javax.swing.GroupLayout jPanel1Layout = new javax.swing.GroupLayout(jPanel1);
         jPanel1.setLayout(jPanel1Layout);
@@ -116,7 +130,7 @@ public class UpdateBurgerStatusFrame extends javax.swing.JFrame {
                 .addGroup(jPanel1Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
                     .addGroup(jPanel1Layout.createSequentialGroup()
                         .addComponent(lblOrderStatus)
-                        .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.UNRELATED)
+                        .addGap(63, 63, 63)
                         .addComponent(cbOrderStatus, javax.swing.GroupLayout.PREFERRED_SIZE, 185, javax.swing.GroupLayout.PREFERRED_SIZE))
                     .addGroup(jPanel1Layout.createSequentialGroup()
                         .addGroup(jPanel1Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
@@ -125,88 +139,53 @@ public class UpdateBurgerStatusFrame extends javax.swing.JFrame {
                             .addComponent(lblCustomerID)
                             .addComponent(lblOrderID)
                             .addComponent(lblCustomerName))
-                        .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
-                        .addGroup(jPanel1Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
-                            .addGroup(javax.swing.GroupLayout.Alignment.TRAILING, jPanel1Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING, false)
-                                .addComponent(txtCustomerName)
-                                .addComponent(txtCustomerID)
-                                .addComponent(txtSearchedID, javax.swing.GroupLayout.PREFERRED_SIZE, 130, javax.swing.GroupLayout.PREFERRED_SIZE))
-                            .addGroup(javax.swing.GroupLayout.Alignment.TRAILING, jPanel1Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING, false)
-                                .addGroup(jPanel1Layout.createSequentialGroup()
-                                    .addGap(6, 6, 6)
-                                    .addComponent(lblTotalValue, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE))
-                                .addComponent(txtBurgerQty, javax.swing.GroupLayout.PREFERRED_SIZE, 130, javax.swing.GroupLayout.PREFERRED_SIZE)))
-                        .addGap(2, 2, 2))
-                    .addGroup(jPanel1Layout.createSequentialGroup()
-                        .addGap(6, 6, 6)
-                        .addComponent(jSeparator2)))
-                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
-                .addComponent(lblStatusAlert, javax.swing.GroupLayout.PREFERRED_SIZE, 210, javax.swing.GroupLayout.PREFERRED_SIZE)
-                .addContainerGap(javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE))
+                        .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
+                        .addGroup(jPanel1Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.TRAILING, false)
+                            .addComponent(txtCustomerName, javax.swing.GroupLayout.Alignment.LEADING, javax.swing.GroupLayout.DEFAULT_SIZE, 250, Short.MAX_VALUE)
+                            .addComponent(txtCustomerID, javax.swing.GroupLayout.Alignment.LEADING)
+                            .addComponent(lblTotalValue, javax.swing.GroupLayout.Alignment.LEADING, javax.swing.GroupLayout.PREFERRED_SIZE, 121, javax.swing.GroupLayout.PREFERRED_SIZE)
+                            .addComponent(txtBurgerQty)
+                            .addComponent(txtSearchedID, javax.swing.GroupLayout.Alignment.LEADING)))
+                    .addComponent(jSeparator2, javax.swing.GroupLayout.PREFERRED_SIZE, 450, javax.swing.GroupLayout.PREFERRED_SIZE))
+                .addContainerGap(77, Short.MAX_VALUE))
         );
         jPanel1Layout.setVerticalGroup(
             jPanel1Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
             .addGroup(jPanel1Layout.createSequentialGroup()
-                .addGap(33, 33, 33)
+                .addGap(24, 24, 24)
                 .addGroup(jPanel1Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.BASELINE)
                     .addComponent(lblOrderStatus)
                     .addComponent(cbOrderStatus, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE))
-                .addGap(9, 9, 9)
-                .addGroup(jPanel1Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
-                    .addGroup(jPanel1Layout.createSequentialGroup()
-                        .addComponent(jSeparator2, javax.swing.GroupLayout.PREFERRED_SIZE, 10, javax.swing.GroupLayout.PREFERRED_SIZE)
-                        .addGap(21, 21, 21)
-                        .addGroup(jPanel1Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.BASELINE)
-                            .addComponent(lblOrderID)
-                            .addComponent(txtSearchedID, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE))
-                        .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.UNRELATED)
-                        .addGroup(jPanel1Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.BASELINE)
-                            .addComponent(lblCustomerID)
-                            .addComponent(txtCustomerID, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE))
-                        .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.UNRELATED)
-                        .addGroup(jPanel1Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.BASELINE)
-                            .addComponent(lblCustomerName)
-                            .addComponent(txtCustomerName, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE))
-                        .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.UNRELATED)
-                        .addGroup(jPanel1Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.BASELINE)
-                            .addComponent(lblBurgerQTY)
-                            .addComponent(txtBurgerQty, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE))
-                        .addGap(10, 10, 10)
-                        .addGroup(jPanel1Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.BASELINE)
-                            .addComponent(lblTotal)
-                            .addComponent(lblTotalValue)))
-                    .addComponent(lblStatusAlert, javax.swing.GroupLayout.PREFERRED_SIZE, 29, javax.swing.GroupLayout.PREFERRED_SIZE))
-                .addContainerGap(35, Short.MAX_VALUE))
-        );
-
-        jPanel3.setBackground(new java.awt.Color(255, 0, 0));
-
-        lblWelcomeMessage.setFont(new java.awt.Font("Haettenschweiler", 0, 48)); // NOI18N
-        lblWelcomeMessage.setForeground(new java.awt.Color(255, 255, 255));
-        lblWelcomeMessage.setHorizontalAlignment(javax.swing.SwingConstants.CENTER);
-        lblWelcomeMessage.setText("UPDATE BURGER STATUS DETAILS");
-
-        javax.swing.GroupLayout jPanel3Layout = new javax.swing.GroupLayout(jPanel3);
-        jPanel3.setLayout(jPanel3Layout);
-        jPanel3Layout.setHorizontalGroup(
-            jPanel3Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
-            .addGroup(jPanel3Layout.createSequentialGroup()
-                .addGap(72, 72, 72)
-                .addComponent(lblWelcomeMessage)
-                .addContainerGap(77, Short.MAX_VALUE))
-        );
-        jPanel3Layout.setVerticalGroup(
-            jPanel3Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
-            .addGroup(jPanel3Layout.createSequentialGroup()
-                .addGap(17, 17, 17)
-                .addComponent(lblWelcomeMessage)
-                .addContainerGap(17, Short.MAX_VALUE))
+                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
+                .addComponent(jSeparator2, javax.swing.GroupLayout.PREFERRED_SIZE, 10, javax.swing.GroupLayout.PREFERRED_SIZE)
+                .addGap(18, 18, 18)
+                .addGroup(jPanel1Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.BASELINE)
+                    .addComponent(lblOrderID)
+                    .addComponent(txtSearchedID, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE))
+                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.UNRELATED)
+                .addGroup(jPanel1Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.BASELINE)
+                    .addComponent(lblCustomerID)
+                    .addComponent(txtCustomerID, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE))
+                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.UNRELATED)
+                .addGroup(jPanel1Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.BASELINE)
+                    .addComponent(lblCustomerName)
+                    .addComponent(txtCustomerName, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE))
+                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.UNRELATED)
+                .addGroup(jPanel1Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.BASELINE)
+                    .addComponent(lblBurgerQTY)
+                    .addComponent(txtBurgerQty, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE))
+                .addGap(10, 10, 10)
+                .addGroup(jPanel1Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.BASELINE)
+                    .addComponent(lblTotal)
+                    .addComponent(lblTotalValue))
+                .addContainerGap(javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE))
         );
 
         btnBackToHomePage.setBackground(new java.awt.Color(0, 51, 204));
         btnBackToHomePage.setFont(new java.awt.Font("Haettenschweiler", 0, 18)); // NOI18N
         btnBackToHomePage.setForeground(new java.awt.Color(255, 255, 255));
         btnBackToHomePage.setBorder(javax.swing.BorderFactory.createTitledBorder(""));
+        btnBackToHomePage.setCursor(new java.awt.Cursor(java.awt.Cursor.HAND_CURSOR));
         btnBackToHomePage.setLabel("BACK TO HOME PAGE");
         btnBackToHomePage.addActionListener(new java.awt.event.ActionListener() {
             public void actionPerformed(java.awt.event.ActionEvent evt) {
@@ -218,6 +197,7 @@ public class UpdateBurgerStatusFrame extends javax.swing.JFrame {
         btnQTYUpdate.setFont(new java.awt.Font("Haettenschweiler", 0, 18)); // NOI18N
         btnQTYUpdate.setText("QTY UPDATE");
         btnQTYUpdate.setBorder(javax.swing.BorderFactory.createTitledBorder(""));
+        btnQTYUpdate.setCursor(new java.awt.Cursor(java.awt.Cursor.HAND_CURSOR));
         btnQTYUpdate.addActionListener(new java.awt.event.ActionListener() {
             public void actionPerformed(java.awt.event.ActionEvent evt) {
                 btnQTYUpdateActionPerformed(evt);
@@ -229,11 +209,15 @@ public class UpdateBurgerStatusFrame extends javax.swing.JFrame {
         btnStatusUpdate.setForeground(new java.awt.Color(255, 255, 255));
         btnStatusUpdate.setText("STATUS UPDATE");
         btnStatusUpdate.setBorder(javax.swing.BorderFactory.createTitledBorder(""));
+        btnStatusUpdate.setCursor(new java.awt.Cursor(java.awt.Cursor.HAND_CURSOR));
         btnStatusUpdate.addActionListener(new java.awt.event.ActionListener() {
             public void actionPerformed(java.awt.event.ActionEvent evt) {
                 btnStatusUpdateActionPerformed(evt);
             }
         });
+
+        lblStatusAlert.setFont(new java.awt.Font("News701 BT", 0, 9)); // NOI18N
+        lblStatusAlert.setForeground(new java.awt.Color(255, 51, 51));
 
         javax.swing.GroupLayout jPanel2Layout = new javax.swing.GroupLayout(jPanel2);
         jPanel2.setLayout(jPanel2Layout);
@@ -242,6 +226,7 @@ public class UpdateBurgerStatusFrame extends javax.swing.JFrame {
             .addGroup(javax.swing.GroupLayout.Alignment.TRAILING, jPanel2Layout.createSequentialGroup()
                 .addContainerGap(javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
                 .addGroup(jPanel2Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.TRAILING)
+                    .addComponent(lblStatusAlert, javax.swing.GroupLayout.PREFERRED_SIZE, 210, javax.swing.GroupLayout.PREFERRED_SIZE)
                     .addComponent(btnQTYUpdate, javax.swing.GroupLayout.PREFERRED_SIZE, 158, javax.swing.GroupLayout.PREFERRED_SIZE)
                     .addComponent(btnStatusUpdate, javax.swing.GroupLayout.PREFERRED_SIZE, 158, javax.swing.GroupLayout.PREFERRED_SIZE)
                     .addComponent(btnBackToHomePage, javax.swing.GroupLayout.PREFERRED_SIZE, 158, javax.swing.GroupLayout.PREFERRED_SIZE))
@@ -250,13 +235,45 @@ public class UpdateBurgerStatusFrame extends javax.swing.JFrame {
         jPanel2Layout.setVerticalGroup(
             jPanel2Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
             .addGroup(jPanel2Layout.createSequentialGroup()
-                .addContainerGap(javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
+                .addGap(35, 35, 35)
+                .addComponent(lblStatusAlert, javax.swing.GroupLayout.PREFERRED_SIZE, 90, javax.swing.GroupLayout.PREFERRED_SIZE)
+                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED, 24, Short.MAX_VALUE)
                 .addComponent(btnQTYUpdate)
-                .addGap(62, 62, 62)
+                .addGap(56, 56, 56)
                 .addComponent(btnStatusUpdate)
-                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
+                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.UNRELATED)
                 .addComponent(btnBackToHomePage)
                 .addGap(15, 15, 15))
+        );
+
+        jPanel3.setBackground(new java.awt.Color(102, 102, 255));
+
+        lblWelcomeMessage.setFont(new java.awt.Font("Haettenschweiler", 0, 48)); // NOI18N
+        lblWelcomeMessage.setForeground(new java.awt.Color(255, 255, 255));
+        lblWelcomeMessage.setHorizontalAlignment(javax.swing.SwingConstants.CENTER);
+        lblWelcomeMessage.setText("Burger Status Update - iBurgerHungry");
+
+        burgerIcon.setIcon(new javax.swing.ImageIcon(getClass().getResource("/resources/burger.png"))); // NOI18N
+
+        javax.swing.GroupLayout jPanel3Layout = new javax.swing.GroupLayout(jPanel3);
+        jPanel3.setLayout(jPanel3Layout);
+        jPanel3Layout.setHorizontalGroup(
+            jPanel3Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
+            .addGroup(jPanel3Layout.createSequentialGroup()
+                .addGap(49, 49, 49)
+                .addComponent(burgerIcon)
+                .addGap(18, 18, 18)
+                .addComponent(lblWelcomeMessage)
+                .addContainerGap(javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE))
+        );
+        jPanel3Layout.setVerticalGroup(
+            jPanel3Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
+            .addGroup(jPanel3Layout.createSequentialGroup()
+                .addGap(14, 14, 14)
+                .addGroup(jPanel3Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
+                    .addComponent(lblWelcomeMessage)
+                    .addComponent(burgerIcon))
+                .addContainerGap(14, Short.MAX_VALUE))
         );
 
         javax.swing.GroupLayout layout = new javax.swing.GroupLayout(getContentPane());
@@ -264,9 +281,9 @@ public class UpdateBurgerStatusFrame extends javax.swing.JFrame {
         layout.setHorizontalGroup(
             layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
             .addGroup(layout.createSequentialGroup()
-                .addComponent(jPanel1, javax.swing.GroupLayout.PREFERRED_SIZE, 330, javax.swing.GroupLayout.PREFERRED_SIZE)
+                .addComponent(jPanel1, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
                 .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
-                .addComponent(jPanel2, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
+                .addComponent(jPanel2, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
                 .addContainerGap())
             .addComponent(jPanel3, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
         );
@@ -274,7 +291,7 @@ public class UpdateBurgerStatusFrame extends javax.swing.JFrame {
             layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
             .addGroup(layout.createSequentialGroup()
                 .addComponent(jPanel3, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
-                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
+                .addGap(12, 12, 12)
                 .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
                     .addComponent(jPanel2, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
                     .addComponent(jPanel1, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)))
@@ -285,7 +302,9 @@ public class UpdateBurgerStatusFrame extends javax.swing.JFrame {
     }// </editor-fold>//GEN-END:initComponents
 
     private void btnStatusUpdateActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_btnStatusUpdateActionPerformed
-        String updatedStatus = (String) cbOrderStatus.getSelectedItem();
+        String searchedID = txtSearchedID.getText();
+        
+        String updatedStatus = (String) cbOrderStatus.getSelectedItem(); 
         
         int updatedStatusAsInteger;
         if(updatedStatus.equals("DELIVERED")) {
@@ -296,64 +315,189 @@ public class UpdateBurgerStatusFrame extends javax.swing.JFrame {
             updatedStatusAsInteger = Burger.PREPARING;
         }
         
-        String searchedID = txtSearchedID.getText();
-        int index = burgerCollection.haveAlreadyPlacedBurger(searchedID);
-        if(index!=-1) {
-            Burger burger = burgerCollection.searchedBurgerForRelevantIndex(index);
-            int confirmUpdate = JOptionPane.showConfirmDialog(this, "You're about update the place?", "Confirm Update", JOptionPane.YES_NO_OPTION, JOptionPane.QUESTION_MESSAGE);
-            if(confirmUpdate==JOptionPane.YES_OPTION) {
-                burger.setStatus(updatedStatusAsInteger);
-                JOptionPane.showMessageDialog(this, "You have updated the status successfully!", "Status Updated", JOptionPane.INFORMATION_MESSAGE);
-                btnQTYUpdate.setEnabled(true);
-            } else {
-                dispose();
+        int confirmUpdate = JOptionPane.showConfirmDialog(this, "You're about update the place?", "Confirm Update", JOptionPane.YES_NO_OPTION, JOptionPane.QUESTION_MESSAGE);
+        if(confirmUpdate==JOptionPane.YES_OPTION) {
+            new File("data/temp.txt");
+            FileReader fr = null;
+            try {
+                fr = new FileReader("data/Burger.txt");
+            } catch (FileNotFoundException ex) {
+                Logger.getLogger(UpdateBurgerStatusFrame.class.getName()).log(Level.SEVERE, null, ex);
             }
-        } else {
-                dispose();
+            BufferedReader br = new BufferedReader(fr);
+
+            try {
+                FileWriter tempFileWriter = new FileWriter("data/Temp.txt");
+                String line = null;
+                try {
+                    line = br.readLine();
+                } catch (IOException ex) {
+                    Logger.getLogger(UpdateBurgerStatusFrame.class.getName()).log(Level.SEVERE, null, ex);
+                }
+                while(line!=null) {
+                    String[] rowData = line.split(",");
+                    String extractedBurgerID = rowData[0];
+                    if(extractedBurgerID.equalsIgnoreCase(searchedID)) {
+                        tempFileWriter.write(extractedBurgerID+","+rowData[1]+","+rowData[2]+","+rowData[3]+","+Integer.toString(updatedStatusAsInteger)+"\n");
+                    } else {
+                        tempFileWriter.write(extractedBurgerID+","+rowData[1]+","+rowData[2]+","+rowData[3]+","+rowData[4]+"\n");
+                    }
+                    line = br.readLine();
+                }
+                tempFileWriter.close();
+
+                new File("data/Burger.txt").delete();
+
+                fr = new FileReader("data/Temp.txt");
+                br = new BufferedReader(fr);
+
+                FileWriter fw = new FileWriter("data/Burger.txt");
+                String rereadLine = br.readLine();
+                while(rereadLine!=null) {
+                    String[] updatedRowData = rereadLine.split(",");
+                    fw.write(updatedRowData[0]+","+updatedRowData[1]+","+updatedRowData[2]+","+updatedRowData[3]+","+updatedRowData[4]+"\n");
+
+                    rereadLine = br.readLine();
+                }
+                fw.close();
+
+                fr.close();
+                br.close();
+
+                new File("data/Temp.txt").delete();
+                
+                btnQTYUpdate.setEnabled(true);
+
+                cbOrderStatus.setEnabled(false);
+
+                txtSearchedID.setText("B");
+
+                txtCustomerID.setText("");
+                txtCustomerID.setEnabled(false);
+
+                txtCustomerName.setText("");
+                txtCustomerName.setEnabled(false);
+
+                txtBurgerQty.setText("");
+                txtBurgerQty.setEnabled(false);
+
+                lblTotalValue.setText("");
+                lblTotalValue.setEnabled(false);
+            } catch (IOException ex) {
+                Logger.getLogger(UpdateBurgerStatusFrame.class.getName()).log(Level.SEVERE, null, ex);
+            }
         }
     }//GEN-LAST:event_btnStatusUpdateActionPerformed
 
     private void btnBackToHomePageActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_btnBackToHomePageActionPerformed
         dispose();
+        new DashboardFrame().setVisible(true);
     }//GEN-LAST:event_btnBackToHomePageActionPerformed
 
     private void txtSearchedIDActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_txtSearchedIDActionPerformed
-        String searchedID = txtSearchedID.getText();
-        
-        int index = burgerCollection.haveAlreadyPlacedBurger(searchedID);
-        if(index!=-1) {
-            Burger burger = burgerCollection.searchedBurgerForRelevantIndex(index);
-            txtCustomerID.setText(burger.getCustomerID());
-            txtCustomerName.setText(burger.getCustomerName());
+        FileReader fr = null;
+        try {
+            String searchedID = txtSearchedID.getText();
             
-            txtBurgerQty.setText(String.valueOf(burger.getBurgerQty()));
+            fr = new FileReader("data/Burger.txt");
+            BufferedReader br = new BufferedReader(fr);
             
-            lblTotalValue.setText(String.valueOf(burger.getBurgerQty()*Burger.BURGERPRICE));
-            
-            cbOrderStatus.setEnabled(true);
-            String statusInTextMode = burgerCollection.getStatusInTextMode(burger.getStatus());
-            cbOrderStatus.setSelectedItem(statusInTextMode);
-            if(statusInTextMode.equals("DELIVERED")) {
-                lblStatusAlert.setText("This burger has already Delivered! So, you cannot update this burger...");
-            } else if(statusInTextMode.equals("CANCELED")) {
-                lblStatusAlert.setText("This burger has already Canceled! So, you cannot update this burger...");
-            } else {
-                lblStatusAlert.setText("");
+            try {
+                String line = br.readLine();
+                L1:while(true) {
+                    L2:while(line!=null) {
+                        String[] rowData = line.split(",");
+                        String extractedBurgerID = rowData[0];
+                        if(extractedBurgerID.equalsIgnoreCase(searchedID)) {
+                            txtCustomerID.setText(rowData[1]);
+                            txtCustomerName.setText(rowData[2]);
+
+                            txtBurgerQty.setText(rowData[3]);
+
+                            double total = Integer.parseInt(rowData[3])*Burger.BURGERPRICE;
+                            lblTotalValue.setText(String.valueOf(total));
+
+
+                            String statusInTextMode = getStatusInTextMode(Integer.parseInt(rowData[4]));
+                            cbOrderStatus.setSelectedItem(statusInTextMode);
+
+                            if(statusInTextMode.equals("DELIVERED")) {
+                                lblStatusAlert.setText("<html><b>This burger has already Delivered!<b/> So, you cannot update this burger...</html>");
+                                
+                                cbOrderStatus.setEnabled(false);
+                                btnStatusUpdate.setEnabled(false);
+                            } else if(statusInTextMode.equals("CANCELED")) {
+                                lblStatusAlert.setText("<html><b>This burger has already Canceled!<b/> So, you cannot update this burger...</html>");
+                                
+                                cbOrderStatus.setEnabled(false);
+                                btnStatusUpdate.setEnabled(false);
+                            } else {
+                                lblStatusAlert.setText("");
+                                
+                                cbOrderStatus.setEnabled(true);
+                                btnStatusUpdate.setEnabled(true);
+                            }
+
+                            btnBackToHomePage.setEnabled(true);
+                            break L1;
+                        } else {
+                            line = br.readLine();
+                        }
+                    }
+                    JOptionPane.showMessageDialog(this, "That's invalid! Try another.", "Invalid Burger", JOptionPane.ERROR_MESSAGE);
+                    break;
+                }
+            } catch (IOException ex) {
+                Logger.getLogger(UpdateBurgerStatusFrame.class.getName()).log(Level.SEVERE, null, ex);
             }
-        } else {
-            JOptionPane.showMessageDialog(this, "That's invalid! Try another.", "Invalid Burger", JOptionPane.ERROR_MESSAGE);
+        } catch (FileNotFoundException ex) {
+            Logger.getLogger(UpdateBurgerStatusFrame.class.getName()).log(Level.SEVERE, null, ex);
+        } finally {
+            try {
+                fr.close();
+            } catch (IOException ex) {
+                Logger.getLogger(UpdateBurgerStatusFrame.class.getName()).log(Level.SEVERE, null, ex);
+            }
         }
     }//GEN-LAST:event_txtSearchedIDActionPerformed
 
+    private String getStatusInTextMode(int status) {
+        String statusInTextMode;
+        switch (status) {
+            case 0:
+                statusInTextMode="PREPARING";
+                break;
+            case 1:
+                statusInTextMode="DELIVERED";
+                break;
+            case 2:
+            default:
+                statusInTextMode="CANCELED";
+        }
+        return statusInTextMode;
+    }
+    
     private void btnQTYUpdateActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_btnQTYUpdateActionPerformed
-        new UpdateBurgerQTYFrame(burgerCollection).setVisible(true);
+        dispose();
+        new UpdateBurgerQTYFrame().setVisible(true);
     }//GEN-LAST:event_btnQTYUpdateActionPerformed
+
+    private void cbOrderStatusActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_cbOrderStatusActionPerformed
+        String updatedStatus = (String) cbOrderStatus.getSelectedItem(); 
+        
+        if(updatedStatus.equalsIgnoreCase("PREPARING")) {
+            btnStatusUpdate.setEnabled(false);
+        } else {
+            btnStatusUpdate.setEnabled(true);
+        }
+    }//GEN-LAST:event_cbOrderStatusActionPerformed
 
 
     // Variables declaration - do not modify//GEN-BEGIN:variables
     private javax.swing.JButton btnBackToHomePage;
     private javax.swing.JButton btnQTYUpdate;
     private javax.swing.JButton btnStatusUpdate;
+    private javax.swing.JLabel burgerIcon;
     private javax.swing.JComboBox<String> cbOrderStatus;
     private javax.swing.JPanel jPanel1;
     private javax.swing.JPanel jPanel2;

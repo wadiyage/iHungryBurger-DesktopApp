@@ -4,8 +4,14 @@
  */
 package ihungryburger.ui.view;
 
-import ihungryburger.service.BurgerCollection;
 import ihungryburger.model.Burger;
+import ihungryburger.service.BurgerList;
+import java.io.BufferedReader;
+import java.io.FileNotFoundException;
+import java.io.FileReader;
+import java.io.IOException;
+import java.util.logging.Level;
+import java.util.logging.Logger;
 import javax.swing.table.DefaultTableModel;
 
 
@@ -14,14 +20,9 @@ import javax.swing.table.DefaultTableModel;
  * @author Dell
  */
 public class PreparingFrame extends javax.swing.JFrame {
-    public BurgerCollection burgerCollection;
-    /**
-     * Creates new form DashboardFrame
-     * @param burgerCollection
-     */
-    public PreparingFrame(BurgerCollection burgerCollection) {
+    
+    public PreparingFrame() throws IOException {
         initComponents();
-        this.burgerCollection = burgerCollection;
         loadTableData();
         
         btnReload.requestFocus();
@@ -37,25 +38,46 @@ public class PreparingFrame extends javax.swing.JFrame {
     // <editor-fold defaultstate="collapsed" desc="Generated Code">//GEN-BEGIN:initComponents
     private void initComponents() {
 
-        jPanel1 = new javax.swing.JPanel();
-        btnReload = new javax.swing.JButton();
+        jPanel2 = new javax.swing.JPanel();
+        burgerIcon = new javax.swing.JLabel();
+        lblWelcomeMessage = new javax.swing.JLabel();
         jScrollPane1 = new javax.swing.JScrollPane();
         tblPreparingBurgerDetails = new javax.swing.JTable();
         btnBack = new javax.swing.JButton();
-        jPanel2 = new javax.swing.JPanel();
-        lblWelcomeMessage = new javax.swing.JLabel();
+        btnReload = new javax.swing.JButton();
 
         setDefaultCloseOperation(javax.swing.WindowConstants.EXIT_ON_CLOSE);
+        setUndecorated(true);
 
-        btnReload.setBackground(new java.awt.Color(255, 255, 0));
-        btnReload.setFont(new java.awt.Font("Haettenschweiler", 0, 18)); // NOI18N
-        btnReload.setText("RELOAD");
-        btnReload.setBorder(javax.swing.BorderFactory.createTitledBorder(""));
-        btnReload.addActionListener(new java.awt.event.ActionListener() {
-            public void actionPerformed(java.awt.event.ActionEvent evt) {
-                btnReloadActionPerformed(evt);
-            }
-        });
+        jPanel2.setBackground(new java.awt.Color(102, 102, 255));
+
+        burgerIcon.setIcon(new javax.swing.ImageIcon(getClass().getResource("/resources/burger.png"))); // NOI18N
+
+        lblWelcomeMessage.setFont(new java.awt.Font("Haettenschweiler", 0, 48)); // NOI18N
+        lblWelcomeMessage.setForeground(new java.awt.Color(255, 255, 255));
+        lblWelcomeMessage.setHorizontalAlignment(javax.swing.SwingConstants.CENTER);
+        lblWelcomeMessage.setText("Preparing Burgers - iBurgerHungry");
+
+        javax.swing.GroupLayout jPanel2Layout = new javax.swing.GroupLayout(jPanel2);
+        jPanel2.setLayout(jPanel2Layout);
+        jPanel2Layout.setHorizontalGroup(
+            jPanel2Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
+            .addGroup(jPanel2Layout.createSequentialGroup()
+                .addGap(49, 49, 49)
+                .addComponent(burgerIcon)
+                .addGap(18, 18, 18)
+                .addComponent(lblWelcomeMessage)
+                .addContainerGap(180, Short.MAX_VALUE))
+        );
+        jPanel2Layout.setVerticalGroup(
+            jPanel2Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
+            .addGroup(jPanel2Layout.createSequentialGroup()
+                .addGap(14, 14, 14)
+                .addGroup(jPanel2Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
+                    .addComponent(lblWelcomeMessage)
+                    .addComponent(burgerIcon))
+                .addContainerGap(14, Short.MAX_VALUE))
+        );
 
         tblPreparingBurgerDetails.setFont(new java.awt.Font("Haettenschweiler", 0, 18)); // NOI18N
         tblPreparingBurgerDetails.setModel(new javax.swing.table.DefaultTableModel(
@@ -88,75 +110,51 @@ public class PreparingFrame extends javax.swing.JFrame {
         btnBack.setForeground(new java.awt.Color(255, 255, 255));
         btnBack.setText("BACK");
         btnBack.setBorder(javax.swing.BorderFactory.createTitledBorder(""));
+        btnBack.setCursor(new java.awt.Cursor(java.awt.Cursor.HAND_CURSOR));
         btnBack.addActionListener(new java.awt.event.ActionListener() {
             public void actionPerformed(java.awt.event.ActionEvent evt) {
                 btnBackActionPerformed(evt);
             }
         });
 
-        javax.swing.GroupLayout jPanel1Layout = new javax.swing.GroupLayout(jPanel1);
-        jPanel1.setLayout(jPanel1Layout);
-        jPanel1Layout.setHorizontalGroup(
-            jPanel1Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
-            .addGroup(jPanel1Layout.createSequentialGroup()
-                .addGap(17, 17, 17)
-                .addGroup(jPanel1Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.TRAILING)
-                    .addComponent(jScrollPane1, javax.swing.GroupLayout.PREFERRED_SIZE, 585, javax.swing.GroupLayout.PREFERRED_SIZE)
-                    .addGroup(jPanel1Layout.createSequentialGroup()
-                        .addComponent(btnReload, javax.swing.GroupLayout.PREFERRED_SIZE, 84, javax.swing.GroupLayout.PREFERRED_SIZE)
-                        .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.UNRELATED)
-                        .addComponent(btnBack, javax.swing.GroupLayout.PREFERRED_SIZE, 84, javax.swing.GroupLayout.PREFERRED_SIZE)))
-                .addContainerGap(16, Short.MAX_VALUE))
-        );
-        jPanel1Layout.setVerticalGroup(
-            jPanel1Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
-            .addGroup(jPanel1Layout.createSequentialGroup()
-                .addContainerGap(27, Short.MAX_VALUE)
-                .addComponent(jScrollPane1, javax.swing.GroupLayout.PREFERRED_SIZE, 231, javax.swing.GroupLayout.PREFERRED_SIZE)
-                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.UNRELATED)
-                .addGroup(jPanel1Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
-                    .addComponent(btnBack)
-                    .addComponent(btnReload))
-                .addGap(8, 8, 8))
-        );
-
-        jPanel2.setBackground(new java.awt.Color(255, 0, 0));
-
-        lblWelcomeMessage.setFont(new java.awt.Font("Haettenschweiler", 0, 48)); // NOI18N
-        lblWelcomeMessage.setForeground(new java.awt.Color(255, 255, 255));
-        lblWelcomeMessage.setHorizontalAlignment(javax.swing.SwingConstants.CENTER);
-        lblWelcomeMessage.setText("PREPARING BURGER DETAILS");
-
-        javax.swing.GroupLayout jPanel2Layout = new javax.swing.GroupLayout(jPanel2);
-        jPanel2.setLayout(jPanel2Layout);
-        jPanel2Layout.setHorizontalGroup(
-            jPanel2Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
-            .addGroup(javax.swing.GroupLayout.Alignment.TRAILING, jPanel2Layout.createSequentialGroup()
-                .addContainerGap(javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
-                .addComponent(lblWelcomeMessage)
-                .addGap(105, 105, 105))
-        );
-        jPanel2Layout.setVerticalGroup(
-            jPanel2Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
-            .addGroup(jPanel2Layout.createSequentialGroup()
-                .addGap(19, 19, 19)
-                .addComponent(lblWelcomeMessage)
-                .addContainerGap(19, Short.MAX_VALUE))
-        );
+        btnReload.setBackground(new java.awt.Color(255, 255, 0));
+        btnReload.setFont(new java.awt.Font("Haettenschweiler", 0, 18)); // NOI18N
+        btnReload.setText("RELOAD");
+        btnReload.setBorder(javax.swing.BorderFactory.createTitledBorder(""));
+        btnReload.setCursor(new java.awt.Cursor(java.awt.Cursor.HAND_CURSOR));
+        btnReload.addActionListener(new java.awt.event.ActionListener() {
+            public void actionPerformed(java.awt.event.ActionEvent evt) {
+                btnReloadActionPerformed(evt);
+            }
+        });
 
         javax.swing.GroupLayout layout = new javax.swing.GroupLayout(getContentPane());
         getContentPane().setLayout(layout);
         layout.setHorizontalGroup(
             layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
             .addComponent(jPanel2, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
-            .addComponent(jPanel1, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
+            .addGroup(javax.swing.GroupLayout.Alignment.TRAILING, layout.createSequentialGroup()
+                .addContainerGap()
+                .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.TRAILING)
+                    .addComponent(jScrollPane1)
+                    .addGroup(layout.createSequentialGroup()
+                        .addGap(0, 0, Short.MAX_VALUE)
+                        .addComponent(btnBack, javax.swing.GroupLayout.PREFERRED_SIZE, 84, javax.swing.GroupLayout.PREFERRED_SIZE)
+                        .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
+                        .addComponent(btnReload, javax.swing.GroupLayout.PREFERRED_SIZE, 84, javax.swing.GroupLayout.PREFERRED_SIZE)))
+                .addGap(22, 22, 22))
         );
         layout.setVerticalGroup(
             layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
             .addGroup(layout.createSequentialGroup()
                 .addComponent(jPanel2, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
-                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
-                .addComponent(jPanel1, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE))
+                .addGap(28, 28, 28)
+                .addComponent(jScrollPane1, javax.swing.GroupLayout.PREFERRED_SIZE, 211, javax.swing.GroupLayout.PREFERRED_SIZE)
+                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED, 28, Short.MAX_VALUE)
+                .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.BASELINE)
+                    .addComponent(btnBack)
+                    .addComponent(btnReload))
+                .addGap(21, 21, 21))
         );
 
         pack();
@@ -164,31 +162,46 @@ public class PreparingFrame extends javax.swing.JFrame {
     }// </editor-fold>//GEN-END:initComponents
 
     private void btnReloadActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_btnReloadActionPerformed
-        loadTableData();
+        try {
+            loadTableData();
+        } catch (IOException ex) {
+            Logger.getLogger(PreparingFrame.class.getName()).log(Level.SEVERE, null, ex);
+        }
     }//GEN-LAST:event_btnReloadActionPerformed
 
-    private void loadTableData() {
+    private void loadTableData() throws FileNotFoundException, IOException {
         DefaultTableModel dtm = (DefaultTableModel) tblPreparingBurgerDetails.getModel();
         dtm.setRowCount(0);
         
-        Burger[] burger = burgerCollection.getBurgerReference();
-        for(int i=0;i<burger.length;i++) {
-            if(burger[i].getStatus()==Burger.PREPARING) {
-                Object[] rowData = {burger[i].getOrderID(),burger[i].getCustomerID(),burger[i].getCustomerName(),burger[i].getBurgerQty(),burger[i].getBurgerQty()*Burger.BURGERPRICE};
-                dtm.addRow(rowData);
+        FileReader fr = new FileReader("data/Burger.txt");
+        BufferedReader br = new BufferedReader(fr);
+        
+        String line = br.readLine();
+        while(line!=null) {
+            String[] rowData = line.split(",");
+            int status = Integer.parseInt(rowData[4]);
+            if(status==Burger.PREPARING) {
+                Object[] objectVisedRowData = {rowData[0],rowData[1],rowData[2],rowData[3],status};
+                dtm.addRow(objectVisedRowData);
             }
+            line = br.readLine();
         }
     }
     
     private void btnBackActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_btnBackActionPerformed
-        dispose();
+        try {
+            dispose();
+            new ViewOrdersFrame().setVisible(true);
+        } catch (IOException ex) {
+            Logger.getLogger(CanceledFrame.class.getName()).log(Level.SEVERE, null, ex);
+        }
     }//GEN-LAST:event_btnBackActionPerformed
 
 
     // Variables declaration - do not modify//GEN-BEGIN:variables
     private javax.swing.JButton btnBack;
     private javax.swing.JButton btnReload;
-    private javax.swing.JPanel jPanel1;
+    private javax.swing.JLabel burgerIcon;
     private javax.swing.JPanel jPanel2;
     private javax.swing.JScrollPane jScrollPane1;
     private javax.swing.JLabel lblWelcomeMessage;

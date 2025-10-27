@@ -4,8 +4,15 @@
  */
 package ihungryburger.ui.search;
 
-import ihungryburger.service.BurgerCollection;
 import ihungryburger.model.Burger;
+import ihungryburger.ui.DashboardFrame;
+import java.io.BufferedReader;
+import java.io.FileNotFoundException;
+import java.io.FileReader;
+import java.io.IOException;
+import java.util.Arrays;
+import java.util.logging.Level;
+import java.util.logging.Logger;
 import javax.swing.table.DefaultTableModel;
 
 
@@ -14,14 +21,9 @@ import javax.swing.table.DefaultTableModel;
  * @author Dell
  */
 public class SearchBestCustomerFrame extends javax.swing.JFrame {
-    public BurgerCollection burgerCollection;
-    /**
-     * Creates new form DashboardFrame
-     * @param burgerCollection
-     */
-    public SearchBestCustomerFrame(BurgerCollection burgerCollection) {
+    
+    public SearchBestCustomerFrame() throws IOException {
         initComponents();
-        this.burgerCollection = burgerCollection;
         
         loadTableData();
     }
@@ -36,22 +38,22 @@ public class SearchBestCustomerFrame extends javax.swing.JFrame {
     private void initComponents() {
 
         jPanel1 = new javax.swing.JPanel();
-        lblCustomerNameValue = new javax.swing.JLabel();
         btnReload = new javax.swing.JButton();
         btnBack = new javax.swing.JButton();
         jScrollPane1 = new javax.swing.JScrollPane();
         tblBestCustomerDetails = new javax.swing.JTable();
         jPanel2 = new javax.swing.JPanel();
+        burgerIcon = new javax.swing.JLabel();
         lblWelcomeMessage = new javax.swing.JLabel();
 
-        setDefaultCloseOperation(javax.swing.WindowConstants.EXIT_ON_CLOSE);
-
-        lblCustomerNameValue.setFont(new java.awt.Font("News701 BT", 0, 12)); // NOI18N
+        setDefaultCloseOperation(javax.swing.WindowConstants.DISPOSE_ON_CLOSE);
+        setUndecorated(true);
 
         btnReload.setBackground(new java.awt.Color(255, 255, 0));
         btnReload.setFont(new java.awt.Font("Haettenschweiler", 0, 18)); // NOI18N
         btnReload.setText("RELOAD");
         btnReload.setBorder(javax.swing.BorderFactory.createTitledBorder(""));
+        btnReload.setCursor(new java.awt.Cursor(java.awt.Cursor.HAND_CURSOR));
         btnReload.addActionListener(new java.awt.event.ActionListener() {
             public void actionPerformed(java.awt.event.ActionEvent evt) {
                 btnReloadActionPerformed(evt);
@@ -61,8 +63,9 @@ public class SearchBestCustomerFrame extends javax.swing.JFrame {
         btnBack.setBackground(new java.awt.Color(0, 51, 255));
         btnBack.setFont(new java.awt.Font("Haettenschweiler", 0, 18)); // NOI18N
         btnBack.setForeground(new java.awt.Color(255, 255, 255));
-        btnBack.setText("BACK");
+        btnBack.setText("BACK TO HOME PAGE");
         btnBack.setBorder(javax.swing.BorderFactory.createTitledBorder(""));
+        btnBack.setCursor(new java.awt.Cursor(java.awt.Cursor.HAND_CURSOR));
         btnBack.addActionListener(new java.awt.event.ActionListener() {
             public void actionPerformed(java.awt.event.ActionEvent evt) {
                 btnBackActionPerformed(evt);
@@ -93,64 +96,64 @@ public class SearchBestCustomerFrame extends javax.swing.JFrame {
                 return canEdit [columnIndex];
             }
         });
+        tblBestCustomerDetails.setCursor(new java.awt.Cursor(java.awt.Cursor.TEXT_CURSOR));
         jScrollPane1.setViewportView(tblBestCustomerDetails);
 
         javax.swing.GroupLayout jPanel1Layout = new javax.swing.GroupLayout(jPanel1);
         jPanel1.setLayout(jPanel1Layout);
         jPanel1Layout.setHorizontalGroup(
             jPanel1Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
-            .addGroup(jPanel1Layout.createSequentialGroup()
+            .addGroup(javax.swing.GroupLayout.Alignment.TRAILING, jPanel1Layout.createSequentialGroup()
+                .addContainerGap()
                 .addGroup(jPanel1Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.TRAILING)
-                    .addComponent(btnBack, javax.swing.GroupLayout.PREFERRED_SIZE, 84, javax.swing.GroupLayout.PREFERRED_SIZE)
-                    .addGroup(jPanel1Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
-                        .addGroup(jPanel1Layout.createSequentialGroup()
-                            .addGap(423, 423, 423)
-                            .addComponent(btnReload, javax.swing.GroupLayout.PREFERRED_SIZE, 84, javax.swing.GroupLayout.PREFERRED_SIZE))
-                        .addGroup(jPanel1Layout.createSequentialGroup()
-                            .addGap(17, 17, 17)
-                            .addGroup(jPanel1Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
-                                .addGroup(jPanel1Layout.createSequentialGroup()
-                                    .addGap(58, 58, 58)
-                                    .addComponent(lblCustomerNameValue))
-                                .addComponent(jScrollPane1, javax.swing.GroupLayout.Alignment.TRAILING, javax.swing.GroupLayout.PREFERRED_SIZE, 585, javax.swing.GroupLayout.PREFERRED_SIZE)))))
-                .addContainerGap(16, Short.MAX_VALUE))
+                    .addComponent(jScrollPane1)
+                    .addGroup(jPanel1Layout.createSequentialGroup()
+                        .addGap(0, 0, Short.MAX_VALUE)
+                        .addComponent(btnBack, javax.swing.GroupLayout.PREFERRED_SIZE, 157, javax.swing.GroupLayout.PREFERRED_SIZE)
+                        .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.UNRELATED)
+                        .addComponent(btnReload, javax.swing.GroupLayout.PREFERRED_SIZE, 84, javax.swing.GroupLayout.PREFERRED_SIZE)))
+                .addGap(15, 15, 15))
         );
         jPanel1Layout.setVerticalGroup(
             jPanel1Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
             .addGroup(jPanel1Layout.createSequentialGroup()
-                .addGap(43, 43, 43)
-                .addComponent(lblCustomerNameValue)
-                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
-                .addComponent(jScrollPane1, javax.swing.GroupLayout.DEFAULT_SIZE, 195, Short.MAX_VALUE)
+                .addContainerGap()
+                .addComponent(jScrollPane1, javax.swing.GroupLayout.DEFAULT_SIZE, 235, Short.MAX_VALUE)
                 .addGap(18, 18, 18)
                 .addGroup(jPanel1Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.BASELINE)
                     .addComponent(btnBack, javax.swing.GroupLayout.PREFERRED_SIZE, 27, javax.swing.GroupLayout.PREFERRED_SIZE)
                     .addComponent(btnReload, javax.swing.GroupLayout.PREFERRED_SIZE, 27, javax.swing.GroupLayout.PREFERRED_SIZE))
-                .addGap(15, 15, 15))
+                .addGap(18, 18, 18))
         );
 
         jPanel2.setBackground(new java.awt.Color(102, 102, 255));
 
-        lblWelcomeMessage.setFont(new java.awt.Font("Haettenschweiler", 0, 36)); // NOI18N
+        burgerIcon.setIcon(new javax.swing.ImageIcon(getClass().getResource("/resources/burger.png"))); // NOI18N
+
+        lblWelcomeMessage.setFont(new java.awt.Font("Haettenschweiler", 0, 48)); // NOI18N
         lblWelcomeMessage.setForeground(new java.awt.Color(255, 255, 255));
         lblWelcomeMessage.setHorizontalAlignment(javax.swing.SwingConstants.CENTER);
-        lblWelcomeMessage.setText("SEARCH BEST CUSTOMER DETAILS");
+        lblWelcomeMessage.setText("Search Best Customer - iBurgerHungry");
 
         javax.swing.GroupLayout jPanel2Layout = new javax.swing.GroupLayout(jPanel2);
         jPanel2.setLayout(jPanel2Layout);
         jPanel2Layout.setHorizontalGroup(
             jPanel2Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
             .addGroup(jPanel2Layout.createSequentialGroup()
-                .addGap(125, 125, 125)
+                .addGap(49, 49, 49)
+                .addComponent(burgerIcon)
+                .addGap(18, 18, 18)
                 .addComponent(lblWelcomeMessage)
-                .addContainerGap(javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE))
+                .addContainerGap(124, Short.MAX_VALUE))
         );
         jPanel2Layout.setVerticalGroup(
             jPanel2Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
             .addGroup(jPanel2Layout.createSequentialGroup()
-                .addGap(24, 24, 24)
-                .addComponent(lblWelcomeMessage)
-                .addContainerGap(23, Short.MAX_VALUE))
+                .addGap(14, 14, 14)
+                .addGroup(jPanel2Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
+                    .addComponent(lblWelcomeMessage)
+                    .addComponent(burgerIcon))
+                .addContainerGap(14, Short.MAX_VALUE))
         );
 
         javax.swing.GroupLayout layout = new javax.swing.GroupLayout(getContentPane());
@@ -173,38 +176,152 @@ public class SearchBestCustomerFrame extends javax.swing.JFrame {
     }// </editor-fold>//GEN-END:initComponents
 
     private void btnReloadActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_btnReloadActionPerformed
-        loadTableData();
+        try {
+            loadTableData();
+        } catch (IOException ex) {
+            Logger.getLogger(SearchBestCustomerFrame.class.getName()).log(Level.SEVERE, null, ex);
+        }
     }//GEN-LAST:event_btnReloadActionPerformed
 
-    private void loadTableData() {
+    private void loadTableData() throws IOException {
         DefaultTableModel dtm = (DefaultTableModel) tblBestCustomerDetails.getModel();
         dtm.setRowCount(0);
         
-        String[] removedDuplicateCustomers = burgerCollection.removedDuplicateCustomers();
-        double[] totalPurchased = burgerCollection.totalPurchasedForRelevantCustomers(removedDuplicateCustomers);
+        String[] removedDuplicateCustomers = removeDuplicatedCustomers();
+        double[] totalPurchased = findTotalPurchasedForRelevantCustomer(removedDuplicateCustomers);
         
-        removedDuplicateCustomers = burgerCollection.sortedTotalPurchasedForRelevantCustomers(removedDuplicateCustomers, totalPurchased);
-        double[] sortedTotalPurchased = burgerCollection.sortedTotalPurchased(totalPurchased);
-        String[] desOrderedCustomerNames = burgerCollection.DesOrderedNamesForRelevantCustomers(removedDuplicateCustomers);
-        
+        removedDuplicateCustomers = sortRemovedDuplicatedCustomers(removedDuplicateCustomers, totalPurchased);
+        double[] sortedTotalPurchased = sortTotalPurchasedForRelevantCustomers(totalPurchased);
+        String[] desSortedCustomerNames = desSortedNamesRegardingToTotalPurchasedForRelevantCustomers(removedDuplicateCustomers);
+        System.out.println(Arrays.toString(desSortedCustomerNames));
         for(int i=0;i<removedDuplicateCustomers.length;i++) {
-            Object[] rowData = {removedDuplicateCustomers[i],desOrderedCustomerNames[i],sortedTotalPurchased[i]};
+            Object[] rowData = {removedDuplicateCustomers[i],desSortedCustomerNames[i],sortedTotalPurchased[i]};
             dtm.addRow(rowData);
         }
     }
     
+    private String[] removeDuplicatedCustomers() throws FileNotFoundException, IOException {
+        String[] removedDuplicatedCustomers = new String[0];
+        
+        FileReader fr = new FileReader("data/Burger.txt");
+        BufferedReader br = new BufferedReader(fr);
+                
+        String line = br.readLine();
+        while(line!=null) {
+            String[] rowData = line.split(",");
+            if(!HaveDuplicated(removedDuplicatedCustomers, rowData[1])) {
+                String[] tempRemovedDuplicatedCustomers = new String[removedDuplicatedCustomers.length+1];
+                for(int i=0;i<removedDuplicatedCustomers.length;i++) {
+                    tempRemovedDuplicatedCustomers[i]=removedDuplicatedCustomers[i];
+                }
+                tempRemovedDuplicatedCustomers[tempRemovedDuplicatedCustomers.length-1]=rowData[1];
+                removedDuplicatedCustomers=tempRemovedDuplicatedCustomers;
+            }
+            line = br.readLine();
+        }
+        return removedDuplicatedCustomers;
+    }
+    
+    private boolean HaveDuplicated(String[] removedDuplicatedCustomers, String customerID) { 
+        for(int i=0;i<removedDuplicatedCustomers.length;i++) {
+            if(removedDuplicatedCustomers[i].equals(customerID)) {
+                return true;
+            }
+        }
+        return false;
+    }
+    
+    private double[] findTotalPurchasedForRelevantCustomer(String[] removedDuplicatedCustomers) throws IOException {
+        double[] totalPurchasedForRelevantCustomer = new double[removedDuplicatedCustomers.length];
+        FileReader fr = null;
+        try {
+            for(int i=0;i<removedDuplicatedCustomers.length;i++) {
+                fr = new FileReader("data/Burger.txt");
+                BufferedReader br = new BufferedReader(fr);
+                
+                String line = br.readLine();
+                while(line!=null) {
+                    String[] rowData = line.split(",");
+                    if(removedDuplicatedCustomers[i].equals(rowData[1])) {
+                        totalPurchasedForRelevantCustomer[i]+=Integer.parseInt(rowData[3])*Burger.BURGERPRICE;
+                    }
+                    line = br.readLine();
+                }
+            }
+        } catch (FileNotFoundException ex) {
+            Logger.getLogger(SearchBestCustomerFrame.class.getName()).log(Level.SEVERE, null, ex);
+        } finally {
+            try {
+                fr.close();
+            } catch (IOException ex) {
+                Logger.getLogger(SearchBestCustomerFrame.class.getName()).log(Level.SEVERE, null, ex);
+            }
+        }
+        return totalPurchasedForRelevantCustomer;
+    }
+    
+    private String[] sortRemovedDuplicatedCustomers(String[] removedDuplicatedCustomers, double[] totalPurchased) {
+        for(int i=totalPurchased.length-1;i>=0;i--) {
+            for(int j=0;j<i;j++) {
+                if(totalPurchased[j]<totalPurchased[j+1]) {
+                    double tempTotalPurchased = totalPurchased[j];
+                    totalPurchased[j] = totalPurchased[j+1];
+                    totalPurchased[j+1] = tempTotalPurchased;
+                    
+                    String tempCustomerID = removedDuplicatedCustomers[j];
+                    removedDuplicatedCustomers[j] = removedDuplicatedCustomers[j+1];
+                    removedDuplicatedCustomers[j+1] = tempCustomerID;
+                }
+            }
+        }
+        return removedDuplicatedCustomers;
+    }
+    
+    private double[] sortTotalPurchasedForRelevantCustomers(double[] totalPurchased) {
+        for(int i=totalPurchased.length-1;i>=0;i--) {
+            for(int j=0;j<i;j++) {
+                if(totalPurchased[j]<totalPurchased[j+1]) {
+                    double temp = totalPurchased[j];
+                    totalPurchased[j] = totalPurchased[j+1];
+                    totalPurchased[j+1] = temp;
+                }
+            }
+        }
+        return totalPurchased;
+    }
+    
+    private String[] desSortedNamesRegardingToTotalPurchasedForRelevantCustomers(String[] removedDuplicatedCustomers) throws FileNotFoundException, IOException {
+        String[] sortedRemovedDuplicatedCustomerNames = new String[removedDuplicatedCustomers.length];
+        
+        for(int i=0;i<removedDuplicatedCustomers.length;i++) {
+            FileReader fr = new FileReader("data/Burger.txt");
+            BufferedReader br = new BufferedReader(fr);
+            
+            String line = br.readLine();
+            while(line!=null) {
+                String[] rowData = line.split(",");
+                if(removedDuplicatedCustomers[i].equals(rowData[1])) {
+                    sortedRemovedDuplicatedCustomerNames[i]=rowData[2];
+                }
+                line = br.readLine();
+            }
+        }
+        return sortedRemovedDuplicatedCustomerNames;
+    }
+    
     private void btnBackActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_btnBackActionPerformed
         dispose();
+        new DashboardFrame().setVisible(true);
     }//GEN-LAST:event_btnBackActionPerformed
 
 
     // Variables declaration - do not modify//GEN-BEGIN:variables
     private javax.swing.JButton btnBack;
     private javax.swing.JButton btnReload;
+    private javax.swing.JLabel burgerIcon;
     private javax.swing.JPanel jPanel1;
     private javax.swing.JPanel jPanel2;
     private javax.swing.JScrollPane jScrollPane1;
-    private javax.swing.JLabel lblCustomerNameValue;
     private javax.swing.JLabel lblWelcomeMessage;
     private javax.swing.JTable tblBestCustomerDetails;
     // End of variables declaration//GEN-END:variables

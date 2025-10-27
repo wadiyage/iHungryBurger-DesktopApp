@@ -4,8 +4,15 @@
  */
 package ihungryburger.ui.search;
 
-import ihungryburger.service.BurgerCollection;
 import ihungryburger.model.Burger;
+import ihungryburger.ui.DashboardFrame;
+import java.io.BufferedReader;
+import java.io.FileNotFoundException;
+import java.io.FileReader;
+import java.io.IOException;
+import java.util.logging.Level;
+import java.util.logging.Logger;
+import javax.swing.JOptionPane;
 
 
 /**
@@ -13,14 +20,9 @@ import ihungryburger.model.Burger;
  * @author Dell
  */
 public class SearchBurgerFrame extends javax.swing.JFrame {
-    public BurgerCollection burgerCollection;
-    /**
-     * Creates new form DashboardFrame
-     * @param burgerCollection
-     */
-    public SearchBurgerFrame(BurgerCollection burgerCollection) {
+    
+    public SearchBurgerFrame() {
         initComponents();
-        this.burgerCollection = burgerCollection;
         
         txtSearchedID.setText("B");
         txtSearchedID.requestFocus();
@@ -53,8 +55,10 @@ public class SearchBurgerFrame extends javax.swing.JFrame {
         jSeparator1 = new javax.swing.JSeparator();
         jPanel2 = new javax.swing.JPanel();
         lblWelcomeMessage = new javax.swing.JLabel();
+        burgerIcon = new javax.swing.JLabel();
 
-        setDefaultCloseOperation(javax.swing.WindowConstants.EXIT_ON_CLOSE);
+        setDefaultCloseOperation(javax.swing.WindowConstants.DISPOSE_ON_CLOSE);
+        setUndecorated(true);
 
         lblOrderID.setFont(new java.awt.Font("Haettenschweiler", 0, 18)); // NOI18N
         lblOrderID.setText("Enter Order ID:");
@@ -96,6 +100,7 @@ public class SearchBurgerFrame extends javax.swing.JFrame {
         btnSearch.setForeground(new java.awt.Color(255, 255, 255));
         btnSearch.setText("SEARCH");
         btnSearch.setBorder(javax.swing.BorderFactory.createTitledBorder(""));
+        btnSearch.setCursor(new java.awt.Cursor(java.awt.Cursor.HAND_CURSOR));
         btnSearch.addActionListener(new java.awt.event.ActionListener() {
             public void actionPerformed(java.awt.event.ActionEvent evt) {
                 btnSearchActionPerformed(evt);
@@ -106,6 +111,7 @@ public class SearchBurgerFrame extends javax.swing.JFrame {
         btnBackToHomePage.setFont(new java.awt.Font("Haettenschweiler", 0, 18)); // NOI18N
         btnBackToHomePage.setForeground(new java.awt.Color(255, 255, 255));
         btnBackToHomePage.setBorder(javax.swing.BorderFactory.createTitledBorder(""));
+        btnBackToHomePage.setCursor(new java.awt.Cursor(java.awt.Cursor.HAND_CURSOR));
         btnBackToHomePage.setLabel("BACK TO HOME PAGE");
         btnBackToHomePage.addActionListener(new java.awt.event.ActionListener() {
             public void actionPerformed(java.awt.event.ActionEvent evt) {
@@ -117,10 +123,6 @@ public class SearchBurgerFrame extends javax.swing.JFrame {
         jPanel1.setLayout(jPanel1Layout);
         jPanel1Layout.setHorizontalGroup(
             jPanel1Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
-            .addGroup(javax.swing.GroupLayout.Alignment.TRAILING, jPanel1Layout.createSequentialGroup()
-                .addGap(0, 0, Short.MAX_VALUE)
-                .addComponent(btnBackToHomePage, javax.swing.GroupLayout.PREFERRED_SIZE, 158, javax.swing.GroupLayout.PREFERRED_SIZE)
-                .addGap(19, 19, 19))
             .addGroup(jPanel1Layout.createSequentialGroup()
                 .addGap(43, 43, 43)
                 .addGroup(jPanel1Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
@@ -137,20 +139,25 @@ public class SearchBurgerFrame extends javax.swing.JFrame {
                             .addComponent(lblQTYValue, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
                             .addComponent(lblTotalValue, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)))
                     .addGroup(jPanel1Layout.createSequentialGroup()
-                        .addGroup(jPanel1Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.TRAILING, false)
-                            .addComponent(jSeparator1, javax.swing.GroupLayout.Alignment.LEADING)
-                            .addGroup(javax.swing.GroupLayout.Alignment.LEADING, jPanel1Layout.createSequentialGroup()
+                        .addGroup(jPanel1Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
+                            .addGroup(jPanel1Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.TRAILING, false)
+                                .addComponent(jSeparator1, javax.swing.GroupLayout.Alignment.LEADING)
+                                .addGroup(javax.swing.GroupLayout.Alignment.LEADING, jPanel1Layout.createSequentialGroup()
+                                    .addComponent(lblOrderStatus)
+                                    .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.UNRELATED)
+                                    .addComponent(lblOrderStatusValue, javax.swing.GroupLayout.DEFAULT_SIZE, 270, Short.MAX_VALUE)))
+                            .addGroup(jPanel1Layout.createSequentialGroup()
                                 .addComponent(lblOrderID)
                                 .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
                                 .addComponent(txtSearchedID, javax.swing.GroupLayout.PREFERRED_SIZE, 218, javax.swing.GroupLayout.PREFERRED_SIZE)
                                 .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
-                                .addComponent(btnSearch))
-                            .addGroup(javax.swing.GroupLayout.Alignment.LEADING, jPanel1Layout.createSequentialGroup()
-                                .addComponent(lblOrderStatus)
-                                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.UNRELATED)
-                                .addComponent(lblOrderStatusValue, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)))
+                                .addComponent(btnSearch, javax.swing.GroupLayout.PREFERRED_SIZE, 120, javax.swing.GroupLayout.PREFERRED_SIZE)))
                         .addGap(0, 0, Short.MAX_VALUE)))
-                .addGap(194, 194, 194))
+                .addGap(154, 154, 154))
+            .addGroup(javax.swing.GroupLayout.Alignment.TRAILING, jPanel1Layout.createSequentialGroup()
+                .addContainerGap(javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
+                .addComponent(btnBackToHomePage, javax.swing.GroupLayout.PREFERRED_SIZE, 157, javax.swing.GroupLayout.PREFERRED_SIZE)
+                .addGap(25, 25, 25))
         );
         jPanel1Layout.setVerticalGroup(
             jPanel1Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
@@ -159,7 +166,7 @@ public class SearchBurgerFrame extends javax.swing.JFrame {
                 .addGroup(jPanel1Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.BASELINE)
                     .addComponent(lblOrderID)
                     .addComponent(txtSearchedID, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
-                    .addComponent(btnSearch, javax.swing.GroupLayout.PREFERRED_SIZE, 26, javax.swing.GroupLayout.PREFERRED_SIZE))
+                    .addComponent(btnSearch, javax.swing.GroupLayout.PREFERRED_SIZE, 36, javax.swing.GroupLayout.PREFERRED_SIZE))
                 .addGap(18, 18, 18)
                 .addComponent(jSeparator1, javax.swing.GroupLayout.PREFERRED_SIZE, 10, javax.swing.GroupLayout.PREFERRED_SIZE)
                 .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
@@ -182,9 +189,9 @@ public class SearchBurgerFrame extends javax.swing.JFrame {
                 .addGroup(jPanel1Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.BASELINE)
                     .addComponent(lblOrderStatus)
                     .addComponent(lblOrderStatusValue))
-                .addGap(28, 28, 28)
+                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.UNRELATED)
                 .addComponent(btnBackToHomePage)
-                .addGap(20, 20, 20))
+                .addGap(36, 36, 36))
         );
 
         jPanel2.setBackground(new java.awt.Color(102, 102, 255));
@@ -192,23 +199,29 @@ public class SearchBurgerFrame extends javax.swing.JFrame {
         lblWelcomeMessage.setFont(new java.awt.Font("Haettenschweiler", 0, 48)); // NOI18N
         lblWelcomeMessage.setForeground(new java.awt.Color(255, 255, 255));
         lblWelcomeMessage.setHorizontalAlignment(javax.swing.SwingConstants.CENTER);
-        lblWelcomeMessage.setText("SEARCH BURGER DETAILS");
+        lblWelcomeMessage.setText("iBurgerHungry - Search Burger Details");
+
+        burgerIcon.setIcon(new javax.swing.ImageIcon(getClass().getResource("/resources/burger.png"))); // NOI18N
 
         javax.swing.GroupLayout jPanel2Layout = new javax.swing.GroupLayout(jPanel2);
         jPanel2.setLayout(jPanel2Layout);
         jPanel2Layout.setHorizontalGroup(
             jPanel2Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
             .addGroup(jPanel2Layout.createSequentialGroup()
-                .addGap(128, 128, 128)
+                .addGap(49, 49, 49)
+                .addComponent(burgerIcon)
+                .addGap(18, 18, 18)
                 .addComponent(lblWelcomeMessage)
-                .addContainerGap(javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE))
+                .addContainerGap(131, Short.MAX_VALUE))
         );
         jPanel2Layout.setVerticalGroup(
             jPanel2Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
             .addGroup(jPanel2Layout.createSequentialGroup()
                 .addGap(14, 14, 14)
-                .addComponent(lblWelcomeMessage)
-                .addContainerGap(20, Short.MAX_VALUE))
+                .addGroup(jPanel2Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
+                    .addComponent(lblWelcomeMessage)
+                    .addComponent(burgerIcon))
+                .addContainerGap(14, Short.MAX_VALUE))
         );
 
         javax.swing.GroupLayout layout = new javax.swing.GroupLayout(getContentPane());
@@ -222,33 +235,72 @@ public class SearchBurgerFrame extends javax.swing.JFrame {
             layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
             .addGroup(layout.createSequentialGroup()
                 .addComponent(jPanel2, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
-                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
-                .addComponent(jPanel1, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE))
+                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
+                .addComponent(jPanel1, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE))
         );
 
         pack();
         setLocationRelativeTo(null);
     }// </editor-fold>//GEN-END:initComponents
 
-    private void btnSearchActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_btnSearchActionPerformed
-        System.out.println("Hello!");
-        String searchedID = txtSearchedID.getText();
-        
-        int index = burgerCollection.haveAlreadyPlacedBurger(searchedID);
-        if(index!=-1) {
-            Burger burger = burgerCollection.searchedBurgerForRelevantIndex(index);
-            lblCustomerIDValue.setText(burger.getCustomerID());
-            lblCustomerNameValue.setText(burger.getCustomerName());
-            
-            lblQTYValue.setText(String.valueOf(burger.getBurgerQty()));
-            lblTotalValue.setText(String.valueOf(burger.getBurgerQty()*Burger.BURGERPRICE));
-            lblOrderStatusValue.setText(burgerCollection.getStatusInTextMode(burger.getStatus()));
-        }
-    }//GEN-LAST:event_btnSearchActionPerformed
-
     private void btnBackToHomePageActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_btnBackToHomePageActionPerformed
         dispose();
+        new DashboardFrame().setVisible(true);
     }//GEN-LAST:event_btnBackToHomePageActionPerformed
+
+    private void btnSearchActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_btnSearchActionPerformed
+        String searchedID = txtSearchedID.getText();
+
+        FileReader fr = null;
+        try {
+            fr = new FileReader("data/Burger.txt");
+        } catch (FileNotFoundException ex) {
+            Logger.getLogger(SearchBurgerFrame.class.getName()).log(Level.SEVERE, null, ex);
+        }
+        BufferedReader br = new BufferedReader(fr);
+
+        String line = null;
+        try {
+            line = br.readLine();
+        } catch (IOException ex) {
+            Logger.getLogger(SearchBurgerFrame.class.getName()).log(Level.SEVERE, null, ex);
+        }
+        L1:while(true) {
+            L2:while(line!=null) {
+                String[] rowData = line.split(",");
+                if(rowData[0].equalsIgnoreCase(searchedID)) {
+                    lblCustomerIDValue.setText(rowData[1]);
+                    lblCustomerNameValue.setText(rowData[2]);
+
+                    lblQTYValue.setText(rowData[3]);
+
+                    double total = Integer.parseInt(rowData[3])*Burger.BURGERPRICE;
+                    lblTotalValue.setText(String.valueOf(total));
+
+                    int status = Integer.parseInt(rowData[4]);
+
+                    String statusInTextMode;
+                    if(status==Burger.DELIVERED) {
+                        statusInTextMode = "DELIVERED";
+                    } else if(status==Burger.CANCELED) {
+                        statusInTextMode = "CANCELED";
+                    } else {
+                        statusInTextMode = "PREPARING";
+                    }
+                    lblOrderStatusValue.setText(statusInTextMode);
+                    break L1;
+                } else {
+                    try {
+                        line = br.readLine();
+                    } catch (IOException ex) {
+                        Logger.getLogger(SearchBurgerFrame.class.getName()).log(Level.SEVERE, null, ex);
+                    }
+                }
+            }
+            JOptionPane.showMessageDialog(this, "That's invalid! Try another.", "Invalid Burger", JOptionPane.ERROR_MESSAGE);
+            break;
+        }
+    }//GEN-LAST:event_btnSearchActionPerformed
 
     private void txtSearchedIDActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_txtSearchedIDActionPerformed
         btnSearch.requestFocus();
@@ -259,6 +311,7 @@ public class SearchBurgerFrame extends javax.swing.JFrame {
     // Variables declaration - do not modify//GEN-BEGIN:variables
     private javax.swing.JButton btnBackToHomePage;
     private javax.swing.JButton btnSearch;
+    private javax.swing.JLabel burgerIcon;
     private javax.swing.JPanel jPanel1;
     private javax.swing.JPanel jPanel2;
     private javax.swing.JSeparator jSeparator1;

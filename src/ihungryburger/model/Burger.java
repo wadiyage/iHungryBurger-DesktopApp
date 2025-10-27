@@ -9,7 +9,7 @@ package ihungryburger.model;
  * @author Dell
  */
 public class Burger {
-    private String orderID;
+    private String burgerID;
     private String customerID;
     private String customerName;
     
@@ -24,8 +24,8 @@ public class Burger {
     public Burger() {
     }
 
-    public Burger(String orderID, String customerID, String customerName, int burgerQty, int status) {
-        this.orderID = orderID;
+    public Burger(String burgerID, String customerID, String customerName, int burgerQty, int status) {
+        this.burgerID = burgerID;
         this.customerID = customerID;
         this.customerName = customerName;
         this.burgerQty = burgerQty;
@@ -35,15 +35,15 @@ public class Burger {
     /**
      * @return the orderID
      */
-    public String getOrderID() {
-        return orderID;
+    public String getBurgerID() {
+        return burgerID;
     }
 
     /**
      * @param orderID the orderID to set
      */
-    public void setOrderID(String orderID) {
-        this.orderID = orderID;
+    public void setOrderID(String burgerID) {
+        this.burgerID = burgerID;
     }
 
     /**
