@@ -5,14 +5,13 @@
 package ihungryburger.controller;
 
 import ihungryburger.model.Burger;
-import ihungryburger.ui.search.SearchBestCustomerFrame;
+import ihungryburger.ui.panels.search.SearchBestCustomerPanel;
 import java.io.BufferedReader;
 import java.io.File;
 import java.io.FileNotFoundException;
 import java.io.FileReader;
 import java.io.FileWriter;
 import java.io.IOException;
-import java.util.Arrays;
 import java.util.logging.Level;
 import java.util.logging.Logger;
 import javax.swing.JTable;
@@ -349,12 +348,12 @@ public class BurgerController {
                 }
             }
         } catch (FileNotFoundException ex) {
-            Logger.getLogger(SearchBestCustomerFrame.class.getName()).log(Level.SEVERE, null, ex);
+            Logger.getLogger(SearchBestCustomerPanel.class.getName()).log(Level.SEVERE, null, ex);
         } finally {
             try {
                 fr.close();
             } catch (IOException ex) {
-                Logger.getLogger(SearchBestCustomerFrame.class.getName()).log(Level.SEVERE, null, ex);
+                Logger.getLogger(SearchBestCustomerPanel.class.getName()).log(Level.SEVERE, null, ex);
             }
         }
         return totalPurchasedForRelevantCustomer;
